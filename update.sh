@@ -8,13 +8,13 @@ for repo in $repos; do
   dir=${repo#*/}
   (
   if [[ -d $dir ]]; then
-    cd ./$dir && git pull
+    [[ ! $1 =~ n ]] && cd ./$dir && git pull
   else
     git clone --depth=1 https://github.com/$repo && cd ./$dir || exit 1
   fi
-  for f in **/*.vim; do
+  for f in **/*.vim doc/*.txt; do
     d=../../${f%/*}; [[ -d $d ]] || mkdir -p $d
-    cp -f $f $d
+    [[ $f -nt ../../$f ]] && cp -f $f $d
   done
   ) &
 done
