@@ -302,6 +302,10 @@ if s:is_dark " DARK VARIANT
   let s:folded_fg = ['#afdf00', '148']
   let s:folded_bg = ['#444444', '237']
 
+  " WildMenu:
+  let s:wildmenu_fg  = s:background
+  let s:wildmenu_bg  = ['#afdf00', '148']
+
   " Diff:
   let s:diffadd_fg    = ['#000000', '16']
   let s:diffadd_bg    = ['#5faf00', '70']
@@ -383,6 +387,10 @@ else " LIGHT VARIANT
   let s:folded_fg = s:navy
   let s:folded_bg = ['#afdfff', '153']
 
+  " WildMenu:
+  let s:wildmenu_fg  = s:foreground
+  let s:wildmenu_bg  = ['#ffff00', '226']
+
   " Diff:
   let s:diffadd_fg    = []
   let s:diffadd_bg    = ['#afffaf', '157']
@@ -438,13 +446,14 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("MatchParen", "", s:matchparen, "")
   call s:HL("Folded", s:folded_fg, s:folded_bg, "")
   call s:HL("FoldColumn", "", s:background, "")
+  call s:HL("WildMenu", s:wildmenu_fg, s:wildmenu_bg, "bold")
   if version >= 700
     call s:HL("CursorLine", "", s:cursorline, "none")
     call s:HL("CursorLineNr", s:cursorlinenr, "", "none")
     call s:HL("CursorColumn", "", s:cursorcolumn, "none")
     call s:HL("PMenu", s:foreground, s:selection, "none")
     call s:HL("PMenuSel", s:foreground, s:selection, "reverse")
-    call s:HL("SignColumn", "", s:background, "none")
+    call s:HL("SignColumn", s:green, s:background, "none")
   end
   if version >= 703
     call s:HL("ColorColumn", "", s:cursorcolumn, "none")
@@ -463,7 +472,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("Identifier", s:navy, "", "")
   call s:HL("Function", s:foreground, "", "")
 
-  call s:HL("Statement", s:pink, "", "")
+  call s:HL("Statement", s:pink, "", "none")
   call s:HL("Conditional", s:purple, "", "bold")
   call s:HL("Repeat", s:purple, "", "bold")
   call s:HL("Label", s:blue, "", "")
@@ -520,6 +529,16 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
   call s:HL("vimNotation", s:aqua, "", "")
   call s:HL("vimOper", s:foreground, "", "")
   call s:HL("vimOperParen", s:foreground, "", "")
+  call s:HL("vimSynType", s:purple, "", "none")
+  call s:HL("vimSynReg", s:pink, "", "none")
+  call s:HL("vimSynKeyRegion", s:green, "", "")
+  call s:HL("vimSynRegOpt", s:blue, "", "")
+  call s:HL("vimSynMtchOpt", s:blue, "", "")
+  call s:HL("vimSynContains", s:pink, "", "")
+  call s:HL("vimGroupName", s:foreground, "", "")
+  call s:HL("vimGroupList", s:foreground, "", "")
+  call s:HL("vimHiGroup", s:foreground, "", "")
+  call s:HL("vimGroup", s:navy, "", "bold")
 
   " Makefile Highlighting
   call s:HL("makeIdent", s:blue, "", "")
@@ -766,17 +785,19 @@ call s:HL("cssClassName", s:pink, "", "")
   " JavaScript Highlighting
   call s:HL("javaScriptBraces", s:blue, "", "")
   call s:HL("javaScriptParens", s:blue, "", "")
-  call s:HL("javaScriptIdentifier", s:navy, "", "bold")
-  call s:HL("javaScriptFunction", s:pink, "", "bold")
+  call s:HL("javaScriptIdentifier", s:pink, "", "")
+  call s:HL("javaScriptFunction", s:blue, "", "bold")
   call s:HL("javaScriptConditional", s:purple, "", "bold")
   call s:HL("javaScriptRepeat", s:purple, "", "bold")
   call s:HL("javaScriptBoolean", s:green, "", "bold")
   call s:HL("javaScriptNumber", s:orange, "", "")
   call s:HL("javaScriptMember", s:navy, "", "")
-  call s:HL("javaScriptReserved", s:pink, "", "")
-  " call s:HL("javascriptNull", s:orange, "", "")
-  " call s:HL("javascriptGlobal", s:blue, "", "")
+  call s:HL("javaScriptReserved", s:navy, "", "")
+  call s:HL("javascriptNull", s:comment, "", "bold")
+  call s:HL("javascriptGlobal", s:foreground, "", "")
   call s:HL("javascriptStatement", s:pink, "", "")
+  call s:HL("javaScriptMessage", s:foreground, "", "")
+  call s:HL("javaScriptMember", s:foreground, "", "")
 
   " @target https://github.com/pangloss/vim-javascript
   call s:HL("jsFuncParens", s:blue, "", "")
@@ -1091,8 +1112,12 @@ call s:HL("cssClassName", s:pink, "", "")
   call s:HL("NERDTreeHelp", s:foreground, "", "")
   call s:HL("NERDTreeToggleOff", s:red, "", "")
   call s:HL("NERDTreeToggleOn", s:green, "", "")
-  call s:HL("NERDTreeDir", s:aqua, "", "bold")
+  call s:HL("NERDTreeDir", s:blue, "", "bold")
+  call s:HL("NERDTreeDirSlash", s:pink, "", "")
+  call s:HL("NERDTreeFile", s:foreground, "", "")
   call s:HL("NERDTreeExecFile", s:green, "", "")
+  call s:HL("NERDTreeOpenable", s:pink, "", "bold")
+  call s:HL("NERDTreeClosable", s:pink, "", "")
 
   " Plugin: Tagbar
   call s:HL("TagbarHelpTitle", s:blue, "", "bold")
