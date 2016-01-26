@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Bundles: flazz/vim-colorschemes chriskempson/base16-vim daylerees/colour-schemes/vim
-repos="junegunn/seoul256.vim w0ng/vim-hybrid reedes/vim-colors-pencil freeo/vim-kalisi altercation/vim-colors-solarized romainl/flattened twerth/ir_black whatyouhide/vim-gotham mhinz/vim-janah romainl/apprentice nanotech/jellybeans.vim zeis/vim-kolor jnurmine/zenburn sjl/badwolf goatslacker/mango.vim sk1418/last256 rking/vim-detailed lokaltog/vim-distinguished tomasr/molokai sickill/vim-monokai tpope/vim-vividchalk vim-scripts/twilight nlknguyen/papercolor-theme google/vim-colorscheme-primary endel/vim-github-colorscheme jonathanfilip/vim-lucius noahfrederick/vim-hemisu morhetz/gruvbox sts10/vim-mustard vim-scripts/fu fxn/vim-monochrome"
+repos="junegunn/seoul256.vim w0ng/vim-hybrid reedes/vim-colors-pencil freeo/vim-kalisi altercation/vim-colors-solarized romainl/flattened twerth/ir_black whatyouhide/vim-gotham mhinz/vim-janah romainl/apprentice nanotech/jellybeans.vim zeis/vim-kolor jnurmine/zenburn sjl/badwolf goatslacker/mango.vim sk1418/last256 rking/vim-detailed lokaltog/vim-distinguished tomasr/molokai sickill/vim-monokai tpope/vim-vividchalk vim-scripts/twilight nlknguyen/papercolor-theme google/vim-colorscheme-primary endel/vim-github-colorscheme jonathanfilip/vim-lucius noahfrederick/vim-hemisu morhetz/gruvbox sts10/vim-mustard vim-scripts/fu fxn/vim-monochrome mswift42/vim-themes"
 
 cd ./upstreams
 
