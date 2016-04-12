@@ -1,4 +1,4 @@
-*solarized.vim* for Vim 版本 7.3 or newer. Modified: 2011 May 05
+*solarized.vim* for Vim version 7.3 or newer. Modified: 2011 May 05
 
 
 		Solarized Vim Colorscheme by Ethan Schoonover ~
