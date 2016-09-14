@@ -12,6 +12,9 @@ for repo in $repos; do
   else
     git clone --depth=1 https://github.com/$repo
   fi &
+  while (( $(jobs | wc -l) > 12 )); do
+    wait $!
+  done
 done
 wait
 
