@@ -449,6 +449,7 @@ if has('gui_running') || &t_Co == 88 || &t_Co == 256
   " }}}
 
   " Elixir highlighting------------------------------------------------------{{{
+  hi link elixirModuleDefine Define
   call <sid>X('elixirAlias',             s:hue_6_2, '', '')
   call <sid>X('elixirAtom',              s:hue_1,   '', '')
   call <sid>X('elixirBlockDefinition',   s:hue_3,   '', '')
@@ -595,6 +596,16 @@ if has('gui_running') || &t_Co == 88 || &t_Co == 256
   call <sid>X('pugClass',                 s:hue_6,    '', '')
   call <sid>X('pugDocType',               s:mono_3,   '', 'italic')
   call <sid>X('pugTag',                   s:hue_5,    '', '')
+  " }}}
+
+  " PureScript highlighting -------------------------------------------------{{{
+  call <sid>X('purescriptKeyword',          s:hue_3,     '', '')
+  call <sid>X('purescriptModuleName',       s:syntax_fg, '', '')
+  call <sid>X('purescriptIdentifier',       s:syntax_fg, '', '')
+  call <sid>X('purescriptType',             s:hue_6_2,   '', '')
+  call <sid>X('purescriptTypeVar',          s:hue_5,     '', '')
+  call <sid>X('purescriptConstructor',      s:hue_5,     '', '')
+  call <sid>X('purescriptOperator',         s:syntax_fg, '', '')
   " }}}
 
   " Ruby highlighting -------------------------------------------------------{{{

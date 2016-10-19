@@ -283,11 +283,11 @@ call <sid>hi("DiffAdd",      s:gui0B, s:gui01,  s:cterm0B, s:cterm01, "")
 call <sid>hi("DiffChange",   s:gui03, s:gui01,  s:cterm03, s:cterm01, "")
 call <sid>hi("DiffDelete",   s:gui08, s:gui01,  s:cterm08, s:cterm01, "")
 call <sid>hi("DiffText",     s:gui0D, s:gui01,  s:cterm0D, s:cterm01, "")
-call <sid>hi("DiffAdded",    s:gui0B, s:gui00,  s:cterm0B, s:cterm00, "")
+call <sid>hi("DiffAdded",    s:guiWhite, s:gui0B,  s:ctermWhite, s:cterm0B, "")
 call <sid>hi("DiffFile",     s:gui08, s:gui00,  s:cterm08, s:cterm00, "")
 call <sid>hi("DiffNewFile",  s:gui0B, s:gui00,  s:cterm0B, s:cterm00, "")
 call <sid>hi("DiffLine",     s:gui0D, s:gui00,  s:cterm0D, s:cterm00, "")
-call <sid>hi("DiffRemoved",  s:gui08, s:gui00,  s:cterm08, s:cterm00, "")
+call <sid>hi("DiffRemoved",  s:guiWhite, s:gui08,  s:ctermWhite, s:cterm08, "")
 "}}}
 
 " Git highlighting {{{
@@ -307,6 +307,9 @@ call <sid>hi("htmlBold",    s:gui0A, "", s:cterm0A, "", "")
 call <sid>hi("htmlItalic",  s:gui0E, "", s:cterm0E, "", "")
 call <sid>hi("htmlEndTag",  s:gui05, "", s:cterm05, "", "")
 call <sid>hi("htmlTag",     s:gui05, "", s:cterm05, "", "")
+call <sid>hi("xmlTag",     s:gui0D, "", s:cterm0D, "", "")
+call <sid>hi("xmlEndTag",     s:gui0D, "", s:cterm0D, "", "")
+
 "}}}
 
 " JavaScript highlighting {{{
@@ -370,6 +373,9 @@ call <sid>hi("SignifySignDelete",  s:gui08, s:gui01, s:cterm08, s:cterm01, "")
 call <sid>hi("NeomakeErrorSign",     s:gui08, s:gui01, s:cterm08, s:cterm01, "")
 call <sid>hi("NeomakeWarningSign",  s:gui0A, s:gui01, s:cterm0A, s:cterm01, s:bold)
 call <sid>hi("NeomakeInfoSign",  s:guiWhite, s:gui01, s:ctermWhite, s:cterm01, "")
+
+call <sid>hi("NeomakeError",     s:gui08, "", s:cterm08, "", "undercurl,bold")
+call <sid>hi("NeomakeWarning",  s:gui08, "", s:cterm08, "", "undercurl,bold")
 "}}}
 
 " Spelling highlighting {{{
