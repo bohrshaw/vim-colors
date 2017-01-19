@@ -98,19 +98,19 @@ function! s:h(group, style)
     \ "cterm="   (has_key(a:style, "cterm") ? a:style.cterm    : "NONE")
 endfunction
 
-"public {{
+" public
 
 function! onedark#set_highlight(group, style)
   call s:h(a:group, a:style)
 endfunction
 
-"public end }}
+" /public
 
 " +-----------------+
 " | Color Variables |
 " +-----------------+
 
-let s:red = { "gui": "#E06C75", "cterm": "204", "cterm16": "1" } " Alternate cterm: 168
+let s:red = { "gui": "#E06C75", "cterm": "204", "cterm16": "1" }
 let s:dark_red = { "gui": "#BE5046", "cterm": "196", "cterm16": "9" }
 
 let s:green = { "gui": "#98C379", "cterm": "114", "cterm16": "2" }
@@ -118,20 +118,20 @@ let s:green = { "gui": "#98C379", "cterm": "114", "cterm16": "2" }
 let s:yellow = { "gui": "#E5C07B", "cterm": "180", "cterm16": "3" }
 let s:dark_yellow = { "gui": "#D19A66", "cterm": "173", "cterm16": "11" }
 
-let s:blue = { "gui": "#61AFEF", "cterm": "39", "cterm16": "4" } " Alternate cterm: 75
+let s:blue = { "gui": "#61AFEF", "cterm": "39", "cterm16": "4" }
 
-let s:purple = { "gui": "#C678DD", "cterm": "170", "cterm16": "5" } " Alternate cterm: 176
+let s:purple = { "gui": "#C678DD", "cterm": "170", "cterm16": "5" }
 
-let s:cyan = { "gui": "#56B6C2", "cterm": "38", "cterm16": "6" } " Alternate cterm: 73
+let s:cyan = { "gui": "#56B6C2", "cterm": "38", "cterm16": "6" }
 
-let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16" : "7" }
+let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16": "7" }
 
 let s:black = { "gui": "#282C34", "cterm": "235", "cterm16": "0" }
 let s:visual_black = { "gui": "NONE", "cterm": "NONE", "cterm16": s:black.cterm16 } " Black out selected text in 16-color visual mode
 
 let s:comment_grey = { "gui": "#5C6370", "cterm": "59", "cterm16": "15" }
 let s:gutter_fg_grey = { "gui": "#636D83", "cterm": "238", "cterm16": "15" }
-let s:cursor_grey =  { "gui": "#2C323C", "cterm": "236", "cterm16": "8" }
+let s:cursor_grey = { "gui": "#2C323C", "cterm": "236", "cterm16": "8" }
 let s:visual_grey = { "gui": "#3E4452", "cterm": "237", "cterm16": "15" }
 let s:menu_grey = { "gui": s:visual_grey.gui, "cterm": s:visual_grey.cterm, "cterm16": "8" }
 let s:special_grey = { "gui": "#3B4048", "cterm": "238", "cterm16": "15" }
@@ -285,6 +285,7 @@ call s:h("jsFuncCall", { "fg": s:blue })
 call s:h("jsFunction", { "fg": s:purple })
 call s:h("jsGlobalObjects", { "fg": s:yellow })
 call s:h("jsImport", { "fg": s:purple })
+call s:h("jsModuleAs", { "fg": s:purple })
 call s:h("jsModuleWords", { "fg": s:purple })
 call s:h("jsModules", { "fg": s:purple })
 call s:h("jsNull", { "fg": s:dark_yellow })
@@ -353,6 +354,26 @@ call s:h("markdownIdDeclaration", { "fg": s:blue })
 call s:h("markdownLinkText", { "fg": s:blue })
 call s:h("markdownLinkDelimiter", { "fg": s:white })
 call s:h("markdownUrl", { "fg": s:purple })
+
+" PHP
+call s:h("phpVarSelector", { "fg": s:red })
+call s:h("phpOperator", { "fg": s:white })
+call s:h("phpParent", { "fg": s:white })
+call s:h("phpMemberSelector", { "fg": s:white })
+call s:h("phpType", { "fg": s:purple })
+call s:h("phpKeyword", { "fg": s:purple })
+call s:h("phpClass", { "fg": s:yellow })
+call s:h("phpUseClass", { "fg": s:white })
+call s:h("phpUseAlias", { "fg": s:white })
+call s:h("phpInclude", { "fg": s:purple })
+call s:h("phpClassExtends", { "fg": s:green })
+call s:h("phpDocTags", { "fg": s:white })
+call s:h("phpFunction", { "fg": s:blue })
+call s:h("phpFunctions", { "fg": s:cyan })
+call s:h("phpMethodsVar", { "fg": s:dark_yellow })
+call s:h("phpMagicConstants", { "fg": s:dark_yellow })
+call s:h("phpSuperglobals", { "fg": s:red })
+call s:h("phpConstants", { "fg": s:dark_yellow })
 
 " Ruby
 call s:h("rubyBlockParameter", { "fg": s:red})
