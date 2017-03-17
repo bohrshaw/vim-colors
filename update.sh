@@ -1,7 +1,49 @@
 #!/bin/bash
 
 # Bundles: flazz/vim-colorschemes chriskempson/base16-vim daylerees/colour-schemes/vim
-repos="robertmeta/nofrils junegunn/seoul256.vim w0ng/vim-hybrid reedes/vim-colors-pencil freeo/vim-kalisi altercation/vim-colors-solarized lifepillar/vim-solarized8 romainl/flattened twerth/ir_black whatyouhide/vim-gotham mhinz/vim-janah romainl/apprentice nanotech/jellybeans.vim zeis/vim-kolor jnurmine/zenburn sjl/badwolf goatslacker/mango.vim sk1418/last256 rking/vim-detailed lokaltog/vim-distinguished tomasr/molokai sickill/vim-monokai tpope/vim-vividchalk vim-scripts/twilight nlknguyen/papercolor-theme google/vim-colorscheme-primary endel/vim-github-colorscheme jonathanfilip/vim-lucius noahfrederick/vim-hemisu morhetz/gruvbox sts10/vim-mustard vim-scripts/fu fxn/vim-monochrome mswift42/vim-themes baskerville/bubblegum ehartc/spink joshdick/onedark.vim mhartington/oceanic-next rakr/vim-one trevordmiller/nova-vim dracula/vim"
+repos="
+altercation/vim-colors-solarized
+baskerville/bubblegum
+dracula/vim
+ehartc/spink
+endel/vim-github-colorscheme
+freeo/vim-kalisi
+fxn/vim-monochrome
+goatslacker/mango.vim
+google/vim-colorscheme-primary
+jnurmine/zenburn
+jonathanfilip/vim-lucius
+joshdick/onedark.vim
+junegunn/seoul256.vim
+lifepillar/vim-solarized8
+lokaltog/vim-distinguished
+mhartington/oceanic-next
+mhinz/vim-janah
+morhetz/gruvbox
+mswift42/vim-themes
+nanotech/jellybeans.vim
+nlknguyen/papercolor-theme
+noahfrederick/vim-hemisu
+rakr/vim-one
+reedes/vim-colors-pencil
+rking/vim-detailed
+robertmeta/nofrils
+romainl/apprentice
+romainl/flattened
+sickill/vim-monokai
+sjl/badwolf
+sk1418/last256
+sts10/vim-mustard
+tomasr/molokai
+tpope/vim-vividchalk
+trevordmiller/nova-vim
+twerth/ir_black
+vim-scripts/fu
+vim-scripts/twilight
+w0ng/vim-hybrid
+whatyouhide/vim-gotham
+zeis/vim-kolor
+"
 
 cd ./upstreams
 
