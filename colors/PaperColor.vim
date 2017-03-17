@@ -179,10 +179,12 @@ let s:themes['default'].dark = {
 " }}}
 
 " Get Selected Theme: {{{
-let s:selected_theme = s:themes['default'] " default
+
+let s:theme_name = 'default'
 if exists("g:PaperColor_Theme") && has_key(s:themes, tolower(g:PaperColor_Theme))
-  let s:selected_theme = s:themes[g:PaperColor_Theme]
+  let s:theme_name = tolower(g:PaperColor_Theme)
 endif
+let s:selected_theme = s:themes[s:theme_name]
 " }}}
 
 " Get Theme Variant: either dark or light  {{{
@@ -203,6 +205,133 @@ else " is light background
   endif
 endif
 " }}}
+
+" Sytematic User-Config Options: {{{
+" Example config in .vimrc
+" let g:PaperColor_Theme_Options = {
+"       \   'theme': {
+"       \     'default': {
+"       \       'allow_bold': 1,
+"       \       'allow_italic': 0,
+"       \       'transparent_background': 1
+"       \     }
+"       \   },
+"       \   'language': {
+"       \     'python': {
+"       \       'highlight_builtins' : 1
+"       \     },
+"       \     'c': {
+"       \       'highlight_builtins' : 1
+"       \     },
+"       \     'cpp': {
+"       \       'highlight_standard_library': 1
+"       \     }
+"       \   }
+"       \ }
+"
+let s:options = {}
+if exists("g:PaperColor_Theme_Options")
+  let s:options = g:PaperColor_Theme_Options
+endif
+
+" }}}
+
+" Theme Options: {{{
+" Part of user-config options
+let s:theme_options = {}
+if has_key(s:options, 'theme')
+  let s:theme_options = s:options['theme']
+endif
+
+
+" Function to obtain theme option for the current theme
+" @param option - string
+" @return the value of that option if specified; empty string otherwise
+" Example: s:Theme_Options('transparent_background')
+"     returns 1 if there is an option for current theme in `theme` section in
+"     g:PaperColor_Theme_Options such as:
+"       'theme': {
+"       \   'default': {
+"       \     'transparent_background': 1
+"       \   }
+"       }
+"     OR it could specify for the exact light or dark variant of the theme,
+"     which will take higher precedence for the current theme variant
+"       'theme': {
+"       \   'default': {
+"       \     'transparent_background': 0
+"       \   },
+"       \   'default.light': {
+"       \     'transparent_background': 1
+"       \   }
+"       }
+fun! s:Theme_Options(option)
+  let l:value = ''
+
+  let l:variant = 'light'
+  if s:is_dark
+    let l:variant = 'dark'
+  endif
+  let l:specific_theme_variant = s:theme_name . '.' . l:variant
+
+  if has_key(s:theme_options, l:specific_theme_variant)
+    let l:theme_option = s:theme_options[l:specific_theme_variant]
+    if has_key(l:theme_option, a:option)
+      let l:value = l:theme_option[a:option]
+    endif
+  elseif has_key(s:theme_options, s:theme_name)
+    let l:theme_option = s:theme_options[s:theme_name]
+    if has_key(l:theme_option, a:option)
+      let l:value = l:theme_option[a:option]
+    endif
+  endif
+
+  return l:value
+endfun
+
+" These options will be checked at many place so better be cached to variables
+let s:TRANSPARENT_BACKGROUND = s:Theme_Options('transparent_background') == 1
+
+
+" }}}
+
+" Language Options: {{{
+" Part of user-config options
+let s:language_options = {}
+if has_key(s:options, 'language')
+  let s:language_options = s:options['language']
+endif
+
+" Function to obtain a language option
+" @param option - string pattern [language].[option]
+" @param value - number or string
+" @return the option value if it is provided; empty string otherwise
+" Example: s:Language_Options('python.highlight_builtins', 1)
+"     returns 1 if there is an option in `language` section in
+"     g:PaperColor_Theme_Options such as:
+"       'language': {
+"       \   'python': {
+"       \     'highlight_builtins': 1
+"       \   }
+"       }
+fun! s:Language_Options(option)
+  let l:parts = split(a:option, "\\.")
+  let l:language = l:parts[0]
+  let l:option = l:parts[1]
+
+  if has_key(s:language_options, l:language)
+    let l:language_option = s:language_options[l:language]
+    if has_key(l:language_option, l:option)
+      return l:language_option[l:option]
+    endif
+  endif
+
+  return ''
+endfun
+
+" }}}
+
+
 
 " HEX TO 256-COLOR CONVERTER: {{{
 " Returns an approximate grey index for the given grey level
@@ -738,38 +867,30 @@ fun! s:set_color_variables()
 endfun
 " }}}
 
-" LANGUAGE SPECIFIC SYNTAX HIGHLIGHTING FUNCTIONS: {{{
-
-fun! s:color_if_global_boolean_else_foreground(g_bool, color)
-  if get(g:, a:g_bool, 0) ==# 1
-    return a:color
-  else
-    return s:foreground
-  endif
-endfun
-
-fun! s:python_highlight_builtins(color)
-  " g:PaperColor_Python_Highlight_Builtins
-  return s:color_if_global_boolean_else_foreground(
-        \'PaperColor_Python_Highlight_Builtins',
-        \a:color)
-endfun
-
-" }}}
-
 " SET SYNTAX HIGHLIGHTING: {{{
 
 fun! s:set_highlightings_variable()
   let s:highlightings = []
   " Normal group should be executed first. Other parts assume that.
-  call s:HL("Normal", s:foreground, s:background, "")
+  if s:TRANSPARENT_BACKGROUND
+    call s:HL("Normal", s:foreground, "",  "")
+    call s:HL("NonText", s:nontext, "", "")
+  else
+    call s:HL("Normal", s:foreground, s:background, "")
+    call s:HL("NonText", s:nontext, s:background, "")
+  endif
 
   call s:HL("Cursor", s:cursor_fg, s:cursor_bg, "")
-  call s:HL("NonText", s:nontext, "", "")
   call s:HL("SpecialKey", s:nontext, "", "")
   call s:HL("Search", s:search_fg, s:search_bg, "")
-  call s:HL("LineNr", s:linenumber_fg, s:linenumber_bg, "")
-  call s:HL("Conceal", s:linenumber_fg, s:linenumber_bg, "")
+
+  if s:TRANSPARENT_BACKGROUND
+    call s:HL("LineNr", s:linenumber_fg, "", "")
+    call s:HL("Conceal", s:linenumber_fg, "", "")
+  else
+    call s:HL("LineNr", s:linenumber_fg, s:linenumber_bg, "")
+    call s:HL("Conceal", s:linenumber_fg, s:linenumber_bg, "")
+  endif
 
   call s:HL("StatusLine", s:statusline_active_bg, s:statusline_active_fg, "")
   call s:HL("StatusLineNC", s:statusline_inactive_bg, s:statusline_inactive_fg, "")
@@ -798,7 +919,11 @@ fun! s:set_highlightings_variable()
     call s:HL("CursorColumn", "", s:cursorcolumn, "none")
     call s:HL("PMenu", s:popupmenu_fg, s:popupmenu_bg, "none")
     call s:HL("PMenuSel", s:popupmenu_fg, s:popupmenu_bg, "reverse")
-    call s:HL("SignColumn", s:green, s:background, "none")
+    if s:TRANSPARENT_BACKGROUND
+      call s:HL("SignColumn", s:green, s:background, "none")
+    else
+      call s:HL("SignColumn", s:green, "", "none")
+    endif
   end
   if version >= 703
     call s:HL("ColorColumn", "", s:cursorcolumn, "none")
@@ -851,8 +976,6 @@ fun! s:set_highlightings_variable()
   call s:HL("Delimiter",s:aqua, "", "")
   call s:HL("SpecialComment", s:comment, "", s:bold)
   call s:HL("Debug", s:orange, "", "")
-
-  "call s:HL("Ignore", "666666", "", "")
 
   call s:HL("Error", s:error_fg, s:error_bg, "")
   call s:HL("Todo", s:todo_fg, s:todo_bg, s:bold)
@@ -931,27 +1054,39 @@ fun! s:set_highlightings_variable()
   " call s:HL("cSemiColon","", s:blue, "")
   call s:HL("cOperator",s:aqua, "", "")
   " call s:HL("cStatement",s:pink, "", "")
-  call s:HL("cFunction", s:foreground, "", "")
   " call s:HL("cTodo", s:comment, "", s:bold)
   " call s:HL("cStructure", s:blue, "", s:bold)
   call s:HL("cCustomParen", s:foreground, "", "")
   " call s:HL("cCustomFunc", s:foreground, "", "")
   " call s:HL("cUserFunction",s:blue, "", s:bold)
   call s:HL("cOctalZero", s:purple, "", s:bold)
+  if s:Language_Options('c.highlight_builtins') == 1
+    call s:HL("cFunction", s:blue, "", "")
+  else
+    call s:HL("cFunction", s:foreground, "", "")
+  endif
 
   " CPP highlighting
   call s:HL("cppBoolean", s:navy, "", "")
   call s:HL("cppSTLnamespace", s:purple, "", "")
-  call s:HL("cppSTLconstant", s:foreground, "", "")
-  call s:HL("cppSTLtype", s:foreground, "", "")
   call s:HL("cppSTLexception", s:pink, "", "")
   call s:HL("cppSTLfunctional", s:foreground, "", s:bold)
   call s:HL("cppSTLiterator", s:foreground, "", s:bold)
-  " call s:HL("cppSTLfunction", s:aqua, "", s:bold)
   call s:HL("cppExceptions", s:red, "", "")
   call s:HL("cppStatement", s:blue, "", "")
   call s:HL("cppStorageClass", s:navy, "", s:bold)
   call s:HL("cppAccess",s:blue, "", "")
+  if s:Language_Options('cpp.highlight_standard_library') == 1
+    call s:HL("cppSTLconstant", s:green, "", s:bold)
+    call s:HL("cppSTLtype", s:pink, "", s:bold)
+    call s:HL("cppSTLfunction", s:blue, "", "")
+    call s:HL("cppSTLios", s:olive, "", s:bold)
+  else
+    call s:HL("cppSTLconstant", s:foreground, "", "")
+    call s:HL("cppSTLtype", s:foreground, "", "")
+    call s:HL("cppSTLfunction", s:foreground, "", "")
+    call s:HL("cppSTLios", s:foreground, "", "")
+  endif
   " call s:HL("cppSTL",s:blue, "", "")
 
 
@@ -1119,8 +1254,14 @@ fun! s:set_highlightings_variable()
   call s:HL("pythonBytesEscape", s:olive, "", s:bold)
   call s:HL("pythonDottedName", s:purple, "", "")
   call s:HL("pythonStrFormat", s:foreground, "", "")
-  call s:HL("pythonBuiltinFunc", s:python_highlight_builtins(s:blue), "", "")
-  call s:HL("pythonBuiltinObj", s:python_highlight_builtins(s:red), "", "")
+
+  if s:Language_Options('python.highlight_builtins') == 1
+    call s:HL("pythonBuiltinFunc", s:blue, "", "")
+    call s:HL("pythonBuiltinObj", s:red, "", "")
+  else
+    call s:HL("pythonBuiltinFunc", s:foreground, "", "")
+    call s:HL("pythonBuiltinObj", s:foreground, "", "")
+  endif
 
   " Java Highlighting
   call s:HL("javaExternal", s:pink, "", "")
@@ -1461,11 +1602,11 @@ fun! s:set_highlightings_variable()
   call s:HL("elixirAlias", s:blue, "", s:bold)
   call s:HL("elixirAtom", s:navy, "", "")
   call s:HL("elixirVariable", s:navy, "", "")
-  call s:HL("elixirUnusedVariable", s:comment, "", "")
+  call s:HL("elixirUnusedVariable", s:foreground, "", s:bold)
   call s:HL("elixirInclude", s:purple, "", "")
   call s:HL("elixirStringDelimiter", s:olive, "", "")
   call s:HL("elixirKeyword", s:purple, "", s:bold)
-  call s:HL("elixirFunctionDeclaration", s:foreground, "", s:bold)
+  call s:HL("elixirFunctionDeclaration", s:aqua, "", s:bold)
   call s:HL("elixirBlockDefinition", s:pink, "", "")
   call s:HL("elixirDefine", s:pink, "", "")
   call s:HL("elixirStructDefine", s:pink, "", "")
@@ -1473,6 +1614,9 @@ fun! s:set_highlightings_variable()
   call s:HL("elixirModuleDefine", s:pink, "", "")
   call s:HL("elixirProtocolDefine", s:pink, "", "")
   call s:HL("elixirImplDefine", s:pink, "", "")
+  call s:HL("elixirModuleDeclaration", s:aqua, "", s:bold)
+  call s:HL("elixirDocString", s:olive, "", "")
+  call s:HL("elixirDocTest", s:green, "", s:bold)
 
   " Erlang Highlighting
   call s:HL("erlangBIF", s:purple, "", s:bold)
