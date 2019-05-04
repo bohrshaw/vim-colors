@@ -1,3 +1,4 @@
+*solarized8.txt*	For Vim version 7.4	Last change: 2019 March 26
 ==============================================================================
 Solarized 8 license		*solarized8-license*
 
@@ -44,7 +45,10 @@ the cursor is blue. NOTE: your terminal may override the cursor's color.
 	let g:solarized_old_cursor_style = 0
 <
 						*g:solarized_statusline*
-Set to `"low"` to reduce the contrast in the status line.
+Set to `"low"` to reduce the contrast in the status line. Set to `"flat"` to
+make the status lines, tab bars and vertical splits similar to how they look
+in the flat variant (of course, `"flat"` does not have any effect in the flat
+variant).
 >
 	let g:solarized_statusline = "normal"
 <
@@ -71,7 +75,7 @@ Tweak the visibility of a few  elements. Allowed values are `"normal"`
 Solarized 8 other options		*solarized8-other-options*
 
 							*g:solarized_use16*
-Set to 1 if you want to use 16 colors.
+Set to 1 if you want to force the use of 16 colors.
 >
 	let g:solarized_use16 = 0
 <

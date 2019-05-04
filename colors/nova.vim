@@ -7,7 +7,7 @@
 function! s:highlight_helper(...)
   let l:syntax_group = a:1
   let l:foreground_color = a:2
-  let l:background_color = empty(a:3) ? "#3C4C55" : a:3
+  let l:background_color = empty(a:3) ? (exists('g:nova_transparent') ? "NONE" : "#3C4C55") : a:3
   let l:gui = a:0 == 3 ? "None" : a:4
 
   exec "highlight " . l:syntax_group . " guifg=" . l:foreground_color . " guibg=" . l:background_color . " gui=" . l:gui . " cterm=NONE term=NONE"
@@ -18,7 +18,6 @@ endfunction
 " RESET
 " ==================================================================
 
-" CORE
 set background=dark
 highlight clear
 set termguicolors
@@ -26,24 +25,6 @@ syntax on
 syntax reset
 let g:colors_name = "nova"
 call s:highlight_helper("Normal", "#C5D4DD", "")
-
-" NEOVIM TERMINAL MODE
-let g:terminal_color_0 = "#3C4C55"
-let g:terminal_color_1 = "#DF8C8C"
-let g:terminal_color_2 = "#A8CE93"
-let g:terminal_color_3 = "#DADA93"
-let g:terminal_color_4 = "#83AFE5"
-let g:terminal_color_5 = "#9A93E1"
-let g:terminal_color_6 = "#7FC1CA"
-let g:terminal_color_7 = "#C5D4DD"
-let g:terminal_color_8 = "#899BA6"
-let g:terminal_color_9 = "#F2C38F"
-let g:terminal_color_10 = "#A8CE93"
-let g:terminal_color_11 = "#DADA93"
-let g:terminal_color_12 = "#83AFE5"
-let g:terminal_color_13 = "#D18EC2"
-let g:terminal_color_14 = "#7FC1CA"
-let g:terminal_color_15 = "#E6EEF3"
 
 
 " ==================================================================
@@ -57,6 +38,7 @@ call s:highlight_helper("WarningMsg", "#DF8C8C", "")
 call s:highlight_helper("SpellBad", "#DF8C8C", "")
 call s:highlight_helper("SpellCap", "#DF8C8C", "")
 call s:highlight_helper("Todo", "#DF8C8C", "")
+call s:highlight_helper("typescriptParenError", "#DF8C8C", "")
 call s:highlight_helper("NeomakeErrorSign", "#DF8C8C", "")
 call s:highlight_helper("NeomakeWarningSign", "#DF8C8C", "")
 
@@ -79,7 +61,10 @@ call s:highlight_helper("StatusLineTerm", "#7FC1CA", "#1E272C")
 call s:highlight_helper("TabLineSel", "#7FC1CA", "#3C4C55")
 call s:highlight_helper("PmenuSel", "#556873", "#7FC1CA")
 call s:highlight_helper("PmenuThumb", "#7FC1CA", "#7FC1CA")
+call s:highlight_helper("netrwTime", "#7FC1CA", "")
+call s:highlight_helper("netrwSizeDate", "#7FC1CA", "")
 call s:highlight_helper("CtrlPMatch", "#3C4C55", "#7FC1CA")
+call s:highlight_helper("gitcommitSummary", "#7FC1CA", "")
 
 " VERSION CONTROL
 call s:highlight_helper("DiffAdd", "#3C4C55", "#A8CE93")
@@ -96,6 +81,7 @@ call s:highlight_helper("SignColumn", "NONE", "")
 call s:highlight_helper("LineNr", "#6A7D89", "")
 call s:highlight_helper("CursorLine", "NONE", "#556873")
 call s:highlight_helper("CursorColumn", "NONE", "#556873")
+call s:highlight_helper("ColorColumn", "NONE", "#556873")
 call s:highlight_helper("EndOfBuffer", "#556873", "")
 call s:highlight_helper("VertSplit", "#1E272C", "")
 call s:highlight_helper("StatusLineNC", "#6A7D89", "#1E272C")
@@ -105,15 +91,12 @@ call s:highlight_helper("TabLineFill", "#1E272C", "#1E272C")
 call s:highlight_helper("ToolbarLine", "#6A7D89", "#1E272C")
 call s:highlight_helper("Pmenu", "#C5D4DD", "#556873")
 call s:highlight_helper("PmenuSbar", "#899BA6", "#899BA6")
-call s:highlight_helper("ColorColumn", "#556873", "")
-call s:highlight_helper("CtrlPStats", "#F2C38F", "")
 call s:highlight_helper("fzf1", "#3C4C55", "#556873")
 call s:highlight_helper("fzf2", "#3C4C55", "#556873")
 call s:highlight_helper("fzf3", "#3C4C55", "#556873")
 call s:highlight_helper("EasyMotionTarget", "#DF8C8C", "", "BOLD")
 call s:highlight_helper("EasyMotionTarget2First", "#F2C38F", "")
 call s:highlight_helper("EasyMotionTarget2Second", "#DADA93", "")
-call s:highlight_helper("EasyMotionShade", "#899BA6", "")
 
 
 " ==================================================================
@@ -161,6 +144,9 @@ call s:highlight_helper("xmlString", "#7FC1CA", "")
 call s:highlight_helper("netrwPlain", "#7FC1CA", "")
 call s:highlight_helper("netrwDir", "#7FC1CA", "")
 call s:highlight_helper("shDerefSimple", "#7FC1CA", "")
+call s:highlight_helper("typescriptBracket", "#7FC1CA", "")
+call s:highlight_helper("typescriptBlock", "#7FC1CA", "")
+call s:highlight_helper("goConst", "#7FC1CA", "")
 
 " IDENTIFIER
 call s:highlight_helper("Identifier", "#83AFE5", "")
@@ -199,6 +185,9 @@ call s:highlight_helper("netrwExe", "#83AFE5", "")
 call s:highlight_helper("shFunction", "#83AFE5", "")
 call s:highlight_helper("typescriptVariableDeclaration", "#83AFE5", "")
 call s:highlight_helper("typescriptCall", "#83AFE5", "")
+call s:highlight_helper("typescriptRef", "#83AFE5", "")
+call s:highlight_helper("typescriptVars", "#83AFE5", "")
+call s:highlight_helper("typescriptFunction", "#83AFE5", "")
 
 " STATEMENT
 call s:highlight_helper("Statement", "#DADA93", "")
@@ -221,6 +210,9 @@ call s:highlight_helper("shCmdSubRegion", "#DADA93", "")
 call s:highlight_helper("typescriptOperator", "#DADA93", "")
 call s:highlight_helper("typescriptOpSymbols", "#DADA93", "")
 call s:highlight_helper("typescriptProp", "#DADA93", "")
+call s:highlight_helper("typescriptInterpolation", "#DADA93", "")
+call s:highlight_helper("typescriptEventListenerMethods", "#DADA93", "")
+call s:highlight_helper("dockerfileKeyword", "#DADA93", "")
 
 " TYPE
 call s:highlight_helper("Type", "#A8CE93", "")
@@ -243,6 +235,8 @@ call s:highlight_helper("typescriptEnumKeyword", "#A8CE93", "")
 call s:highlight_helper("typescriptVariable", "#A8CE93", "")
 call s:highlight_helper("typescriptFuncKeyword", "#A8CE93", "")
 call s:highlight_helper("typescriptDefault", "#A8CE93", "")
+call s:highlight_helper("typescriptReserved", "#A8CE93", "")
+call s:highlight_helper("goDeclaration", "#A8CE93", "")
 
 " GLOBAL
 call s:highlight_helper("PreProc", "#9A93E1", "")
@@ -257,6 +251,8 @@ call s:highlight_helper("cssFontDescriptor", "#9A93E1", "")
 call s:highlight_helper("typescriptGlobal", "#9A93E1", "")
 call s:highlight_helper("typescriptExport", "#9A93E1", "")
 call s:highlight_helper("typescriptImport", "#9A93E1", "")
+call s:highlight_helper("goPackage", "#9A93E1", "")
+call s:highlight_helper("goImport", "#9A93E1", "")
 
 " EMPHASIS
 call s:highlight_helper("Underlined", "#D18EC2", "")
@@ -293,9 +289,13 @@ call s:highlight_helper("markdownLinkText", "#F2C38F", "")
 call s:highlight_helper("markdownCodeDelimiter", "#F2C38F", "")
 call s:highlight_helper("netrwClassify", "#F2C38F", "")
 call s:highlight_helper("netrwVersion", "#F2C38F", "")
+call s:highlight_helper("netrwSpecial", "#F2C38F", "")
 call s:highlight_helper("typescriptParens", "#F2C38F", "")
 call s:highlight_helper("typescriptBraces", "#F2C38F", "")
 call s:highlight_helper("typescriptArrowFunc", "#F2C38F", "")
+call s:highlight_helper("typescriptPropietaryMethods", "#F2C38F", "")
+call s:highlight_helper("typescriptParen", "#F2C38F", "")
+call s:highlight_helper("CtrlPStats", "#F2C38F", "")
 
 " TRIVIAL
 call s:highlight_helper("Comment", "#899BA6", "")
@@ -309,3 +309,76 @@ call s:highlight_helper("jsonQuote", "#899BA6", "")
 call s:highlight_helper("shQuote", "#899BA6", "")
 call s:highlight_helper("typescriptEndColons", "#899BA6", "")
 call s:highlight_helper("typescriptTemplateSB", "#899BA6", "")
+call s:highlight_helper("typescriptCommentSkip", "#899BA6", "")
+call s:highlight_helper("typescriptDotNotation", "#899BA6", "")
+call s:highlight_helper("netrwSortBy", "#899BA6", "")
+call s:highlight_helper("netrwSortSeq", "#899BA6", "")
+call s:highlight_helper("netrwQuickHelp", "#899BA6", "")
+call s:highlight_helper("netrwCopyTgt", "#899BA6", "")
+call s:highlight_helper("netrwTreeBarSpace", "#899BA6", "")
+call s:highlight_helper("netrwSlash", "#899BA6", "")
+call s:highlight_helper("netrwCmdNote", "#899BA6", "")
+call s:highlight_helper("EasyMotionShade", "#899BA6", "")
+
+
+" ==================================================================
+" VARIABLES
+" ==================================================================
+
+" VIM TERMINAL MODE
+let g:terminal_ansi_colors = [
+\ "#3C4C55",
+\ "#DF8C8C",
+\ "#A8CE93",
+\ "#DADA93",
+\ "#83AFE5",
+\ "#9A93E1",
+\ "#7FC1CA",
+\ "#C5D4DD",
+\ "#899BA6",
+\ "#F2C38F",
+\ "#A8CE93",
+\ "#DADA93",
+\ "#83AFE5",
+\ "#D18EC2",
+\ "#7FC1CA",
+\ "#E6EEF3"
+\]
+
+" NEOVIM TERMINAL MODE
+let g:terminal_color_0 = "#3C4C55"
+let g:terminal_color_1 = "#DF8C8C"
+let g:terminal_color_2 = "#A8CE93"
+let g:terminal_color_3 = "#DADA93"
+let g:terminal_color_4 = "#83AFE5"
+let g:terminal_color_5 = "#9A93E1"
+let g:terminal_color_6 = "#7FC1CA"
+let g:terminal_color_7 = "#C5D4DD"
+let g:terminal_color_8 = "#899BA6"
+let g:terminal_color_9 = "#F2C38F"
+let g:terminal_color_10 = "#A8CE93"
+let g:terminal_color_11 = "#DADA93"
+let g:terminal_color_12 = "#83AFE5"
+let g:terminal_color_13 = "#D18EC2"
+let g:terminal_color_14 = "#7FC1CA"
+let g:terminal_color_15 = "#E6EEF3"
+
+" FZF
+let g:fzf_colors = {
+\ "fg":      ["fg", "Normal"],
+\ "bg":      ["bg", "Normal"],
+\ "hl":      ["fg", "IncSearch"],
+\ "fg+":     ["fg", "CursorLine", "CursorColumn", "Normal"],
+\ "bg+":     ["bg", "CursorLine", "CursorColumn"],
+\ "hl+":     ["fg", "IncSearch"],
+\ "info":    ["fg", "IncSearch"],
+\ "border":  ["fg", "Ignore"],
+\ "prompt":  ["fg", "Comment"],
+\ "pointer": ["fg", "IncSearch"],
+\ "marker":  ["fg", "IncSearch"],
+\ "spinner": ["fg", "IncSearch"],
+\ "header":  ["fg", "IncSearch"]
+\}
+
+" VIM-POLYGLOT
+let g:javascript_plugin_flow = 1

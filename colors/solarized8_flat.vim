@@ -4,10 +4,10 @@
 " Maintainer:   Lifepillar <lifepillar@lifepillar.me>
 " Website:      https://github.com/lifepillar/vim-solarized8
 " License:      OSI approved MIT license
-" Last Updated: Wed Nov 29 19:34:18 2017
+" Last Updated: Wed May  1 23:22:17 2019
 
 if !(has('termguicolors') && &termguicolors) && !has('gui_running')
-      \ && (!exists('&t_Co') || &t_Co < (get(g:, 'solarized_use16', 0) ? 16 : 256))
+      \ && (!exists('&t_Co') || &t_Co < (get(g:, 'solarized_use16', &t_Co < 256) ? 16 : 256))
   echoerr '[Solarized 8 Flat] There are not enough colors.'
   finish
 endif
@@ -20,26 +20,30 @@ endif
 let g:colors_name = 'solarized8_flat'
 
 " 256-color variant
-if !get(g:, 'solarized_use16', 0)
+if !get(g:, 'solarized_use16', &t_Co < 256)
   if &background ==# 'dark'
-    " Color similarity table (dark background)
-    "  yellow: GUI=#b58900/rgb(181,137,  0)  Term=136 #af8700/rgb(175,135,  0)  [delta=1.465279]
-    "    blue: GUI=#268bd2/rgb( 38,139,210)  Term= 32 #0087d7/rgb(  0,135,215)  [delta=2.677029]
-    " magenta: GUI=#d33682/rgb(211, 54,130)  Term=162 #d70087/rgb(215,  0,135)  [delta=4.342643]
-    "    cyan: GUI=#2aa198/rgb( 42,161,152)  Term= 37 #00afaf/rgb(  0,175,175)  [delta=5.365780]
-    "   base1: GUI=#93a1a1/rgb(147,161,161)  Term=247 #9e9e9e/rgb(158,158,158)  [delta=6.489730]
-    "  violet: GUI=#6c71c4/rgb(108,113,196)  Term= 61 #5f5faf/rgb( 95, 95,175)  [delta=6.795109]
-    "     red: GUI=#dc322f/rgb(220, 50, 47)  Term=160 #d70000/rgb(215,  0,  0)  [delta=6.843619]
-    "   green: GUI=#859900/rgb(133,153,  0)  Term=106 #87af00/rgb(135,175,  0)  [delta=6.901386]
-    "   base0: GUI=#839496/rgb(131,148,150)  Term=246 #949494/rgb(148,148,148)  [delta=7.557606]
-    "   base3: GUI=#fdf6e3/rgb(253,246,227)  Term=230 #ffffd7/rgb(255,255,215)  [delta=7.816259]
-    "  orange: GUI=#cb4b16/rgb(203, 75, 22)  Term=166 #d75f00/rgb(215, 95,  0)  [delta=8.065025]
-    "   base2: GUI=#eee8d5/rgb(238,232,213)  Term=254 #e4e4e4/rgb(228,228,228)  [delta=8.289679]
-    "  base00: GUI=#657b83/rgb(101,123,131)  Term= 66 #5f8787/rgb( 95,135,135)  [delta=8.468738]
-    "  base01: GUI=#586e75/rgb( 88,110,117)  Term=242 #6c6c6c/rgb(108,108,108)  [delta=9.227744]
-    "    back: GUI=#002b36/rgb(  0, 43, 54)  Term=235 #262626/rgb( 38, 38, 38)  [delta=12.727247]
-    "  base03: GUI=#002b36/rgb(  0, 43, 54)  Term=235 #262626/rgb( 38, 38, 38)  [delta=12.727247]
-    "  base02: GUI=#073642/rgb(  7, 54, 66)  Term=236 #303030/rgb( 48, 48, 48)  [delta=13.434724]
+    let g:terminal_ansi_colors = ['#073642', '#dc322f', '#859900', '#b58900', '#268bd2', '#d33682', '#2aa198', '#eee8d5',
+          \ '#002b36', '#cb4b16', '#586e75', '#657b83', '#839496', '#6c71c4', '#93a1a1', '#fdf6e3']
+    if has('nvim')
+      hi! link TermCursor Cursor
+      hi TermCursorNC ctermfg=235 ctermbg=242 guifg=#002b36 guibg=#586e75 guisp=NONE cterm=NONE gui=NONE
+      let g:terminal_color_0='#073642'
+      let g:terminal_color_1='#dc322f'
+      let g:terminal_color_2='#859900'
+      let g:terminal_color_3='#b58900'
+      let g:terminal_color_4='#268bd2'
+      let g:terminal_color_5='#d33682'
+      let g:terminal_color_6='#2aa198'
+      let g:terminal_color_7='#eee8d5'
+      let g:terminal_color_8='#002b36'
+      let g:terminal_color_9='#cb4b16'
+      let g:terminal_color_10='#586e75'
+      let g:terminal_color_11='#657b83'
+      let g:terminal_color_12='#839496'
+      let g:terminal_color_13='#6c71c4'
+      let g:terminal_color_14='#93a1a1'
+      let g:terminal_color_15='#fdf6e3'
+    endif
     if !has('gui_running') && get(g:, 'solarized_termtrans', 0)
       hi Normal ctermfg=246 ctermbg=NONE guifg=#839496 guibg=NONE guisp=NONE cterm=NONE gui=NONE
       hi Terminal ctermfg=fg ctermbg=NONE guifg=fg guibg=NONE guisp=NONE cterm=NONE gui=NONE
@@ -110,10 +114,10 @@ if !get(g:, 'solarized_use16', 0)
     hi MatchParen ctermfg=230 ctermbg=236 guifg=#fdf6e3 guibg=#073642 guisp=NONE cterm=NONE,bold gui=NONE,bold
     hi ModeMsg ctermfg=32 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
     hi MoreMsg ctermfg=32 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
-    hi Pmenu ctermfg=236 ctermbg=246 guifg=#073642 guibg=#839496 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-    hi PmenuSbar ctermfg=236 ctermbg=242 guifg=#073642 guibg=#586e75 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-    hi PmenuSel ctermfg=66 ctermbg=254 guifg=#657b83 guibg=#eee8d5 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-    hi PmenuThumb ctermfg=242 ctermbg=235 guifg=#586e75 guibg=#002b36 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
+    hi Pmenu ctermfg=246 ctermbg=236 guifg=#839496 guibg=#073642 guisp=NONE cterm=NONE gui=NONE
+    hi PmenuSbar ctermfg=NONE ctermbg=236 guifg=NONE guibg=#073642 guisp=NONE cterm=NONE gui=NONE
+    hi PmenuSel ctermfg=254 ctermbg=242 guifg=#eee8d5 guibg=#586e75 guisp=NONE cterm=NONE gui=NONE
+    hi PmenuThumb ctermfg=NONE ctermbg=242 guifg=NONE guibg=#586e75 guisp=NONE cterm=NONE gui=NONE
     hi Question ctermfg=37 ctermbg=NONE guifg=#2aa198 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
     hi! link QuickFixLine Search
     hi Search ctermfg=136 ctermbg=NONE guifg=#b58900 guibg=NONE guisp=NONE cterm=NONE,reverse gui=NONE,reverse
@@ -137,7 +141,7 @@ if !get(g:, 'solarized_use16', 0)
     hi CommandMode ctermfg=236 ctermbg=162 guifg=#073642 guibg=#d33682 guisp=NONE cterm=NONE,bold,reverse gui=NONE,bold,reverse
     hi! link StatusLineTerm StatusLine
     hi! link StatusLineTermNC StatusLineNC
-    hi VertSplit ctermfg=236 ctermbg=236 guifg=#073642 guibg=#073642 guisp=NONE cterm=NONE gui=NONE
+    hi VertSplit ctermfg=242 ctermbg=236 guifg=#586e75 guibg=#073642 guisp=NONE cterm=NONE gui=NONE
     hi Visual ctermfg=242 ctermbg=235 guifg=#586e75 guibg=#002b36 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
     hi VisualNOS ctermfg=NONE ctermbg=236 guifg=NONE guibg=#073642 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
     hi WarningMsg ctermfg=166 ctermbg=NONE guifg=#cb4b16 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
@@ -150,7 +154,7 @@ if !get(g:, 'solarized_use16', 0)
     hi! link Define PreProc
     hi! link Debug Special
     hi! link Delimiter Special
-    hi Error ctermfg=160 ctermbg=NONE guifg=#dc322f guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
+    hi Error ctermfg=160 ctermbg=230 guifg=#dc322f guibg=#fdf6e3 guisp=NONE cterm=NONE,bold,reverse gui=NONE,bold,reverse
     hi! link Exception Statement
     hi! link Float Constant
     hi! link Function Identifier
@@ -231,6 +235,7 @@ if !get(g:, 'solarized_use16', 0)
       hi htmlSpecialTagName ctermfg=32 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE,italic
       hi htmlArg ctermfg=66 ctermbg=NONE guifg=#657b83 guibg=NONE guisp=NONE cterm=NONE gui=NONE
       hi javaScript ctermfg=136 ctermbg=NONE guifg=#b58900 guibg=NONE guisp=NONE cterm=NONE gui=NONE
+      hi! link jsFuncCall Function
       hi perlHereDoc ctermfg=247 ctermbg=235 guifg=#93a1a1 guibg=#002b36 guisp=NONE cterm=NONE gui=NONE
       hi perlVarPlain ctermfg=136 ctermbg=235 guifg=#b58900 guibg=#002b36 guisp=NONE cterm=NONE gui=NONE
       hi perlStatementFileDesc ctermfg=37 ctermbg=235 guifg=#2aa198 guibg=#002b36 guisp=NONE cterm=NONE gui=NONE
@@ -368,47 +373,31 @@ if !get(g:, 'solarized_use16', 0)
       hi pandocEmphasisTable cterm=italic
       hi pandocEmphasis cterm=italic
     endif
-    if has('nvim')
-      hi! link TermCursor Cursor
-      hi TermCursorNC ctermfg=235 ctermbg=242 guifg=#002b36 guibg=#586e75 guisp=NONE cterm=NONE gui=NONE
-      let g:terminal_color_8='#002b36'
-      let g:terminal_color_0='#073642'
-      let g:terminal_color_10='#586e75'
-      let g:terminal_color_11='#657b83'
-      let g:terminal_color_12='#839496'
-      let g:terminal_color_14='#93a1a1'
-      let g:terminal_color_7='#eee8d5'
-      let g:terminal_color_15='#fdf6e3'
-      let g:terminal_color_3='#b58900'
-      let g:terminal_color_9='#cb4b16'
-      let g:terminal_color_1='#dc322f'
-      let g:terminal_color_5='#d33682'
-      let g:terminal_color_13='#6c71c4'
-      let g:terminal_color_4='#268bd2'
-      let g:terminal_color_6='#2aa198'
-      let g:terminal_color_2='#859900'
-    endif
     finish
   endif
 
-  " Color similarity table (light background)
-  "  yellow: GUI=#b58900/rgb(181,137,  0)  Term=136 #af8700/rgb(175,135,  0)  [delta=1.465279]
-  "    blue: GUI=#268bd2/rgb( 38,139,210)  Term= 32 #0087d7/rgb(  0,135,215)  [delta=2.677029]
-  " magenta: GUI=#d33682/rgb(211, 54,130)  Term=162 #d70087/rgb(215,  0,135)  [delta=4.342643]
-  "    cyan: GUI=#2aa198/rgb( 42,161,152)  Term= 37 #00afaf/rgb(  0,175,175)  [delta=5.365780]
-  "  base01: GUI=#93a1a1/rgb(147,161,161)  Term=247 #9e9e9e/rgb(158,158,158)  [delta=6.489730]
-  "  violet: GUI=#6c71c4/rgb(108,113,196)  Term= 61 #5f5faf/rgb( 95, 95,175)  [delta=6.795109]
-  "     red: GUI=#dc322f/rgb(220, 50, 47)  Term=160 #d70000/rgb(215,  0,  0)  [delta=6.843619]
-  "   green: GUI=#859900/rgb(133,153,  0)  Term=106 #87af00/rgb(135,175,  0)  [delta=6.901386]
-  "  base00: GUI=#839496/rgb(131,148,150)  Term=246 #949494/rgb(148,148,148)  [delta=7.557606]
-  "    back: GUI=#fdf6e3/rgb(253,246,227)  Term=230 #ffffd7/rgb(255,255,215)  [delta=7.816259]
-  "  base03: GUI=#fdf6e3/rgb(253,246,227)  Term=230 #ffffd7/rgb(255,255,215)  [delta=7.816259]
-  "  orange: GUI=#cb4b16/rgb(203, 75, 22)  Term=166 #d75f00/rgb(215, 95,  0)  [delta=8.065025]
-  "  base02: GUI=#eee8d5/rgb(238,232,213)  Term=254 #e4e4e4/rgb(228,228,228)  [delta=8.289679]
-  "   base0: GUI=#657b83/rgb(101,123,131)  Term= 66 #5f8787/rgb( 95,135,135)  [delta=8.468738]
-  "   base1: GUI=#586e75/rgb( 88,110,117)  Term=242 #6c6c6c/rgb(108,108,108)  [delta=9.227744]
-  "   base3: GUI=#002b36/rgb(  0, 43, 54)  Term=235 #262626/rgb( 38, 38, 38)  [delta=12.727247]
-  "   base2: GUI=#073642/rgb(  7, 54, 66)  Term=236 #303030/rgb( 48, 48, 48)  [delta=13.434724]
+  let g:terminal_ansi_colors = ['#073642', '#dc322f', '#859900', '#b58900', '#268bd2', '#d33682', '#2aa198', '#eee8d5',
+        \ '#002b36', '#cb4b16', '#586e75', '#657b83', '#839496', '#6c71c4', '#93a1a1', '#fdf6e3']
+  if has('nvim')
+    hi! link TermCursor Cursor
+    hi TermCursorNC ctermfg=230 ctermbg=247 guifg=#fdf6e3 guibg=#93a1a1 guisp=NONE cterm=NONE gui=NONE
+    let g:terminal_color_0='#073642'
+    let g:terminal_color_1='#dc322f'
+    let g:terminal_color_2='#859900'
+    let g:terminal_color_3='#b58900'
+    let g:terminal_color_4='#268bd2'
+    let g:terminal_color_5='#d33682'
+    let g:terminal_color_6='#2aa198'
+    let g:terminal_color_7='#eee8d5'
+    let g:terminal_color_8='#002b36'
+    let g:terminal_color_9='#cb4b16'
+    let g:terminal_color_10='#586e75'
+    let g:terminal_color_11='#657b83'
+    let g:terminal_color_12='#839496'
+    let g:terminal_color_13='#6c71c4'
+    let g:terminal_color_14='#93a1a1'
+    let g:terminal_color_15='#fdf6e3'
+  endif
   if !has('gui_running') && get(g:, 'solarized_termtrans', 0)
     hi Normal ctermfg=66 ctermbg=NONE guifg=#657b83 guibg=NONE guisp=NONE cterm=NONE gui=NONE
     hi Terminal ctermfg=fg ctermbg=NONE guifg=fg guibg=NONE guisp=NONE cterm=NONE gui=NONE
@@ -484,17 +473,17 @@ if !get(g:, 'solarized_use16', 0)
   endif
   hi Directory ctermfg=32 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi EndOfBuffer ctermfg=NONE ctermbg=NONE guifg=NONE guibg=NONE guisp=NONE cterm=NONE gui=NONE
-  hi ErrorMsg ctermfg=160 ctermbg=235 guifg=#dc322f guibg=#002b36 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
+  hi ErrorMsg ctermfg=160 ctermbg=230 guifg=#dc322f guibg=#fdf6e3 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
   hi FoldColumn ctermfg=66 ctermbg=NONE guifg=#657b83 guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi Folded ctermfg=66 ctermbg=NONE guifg=#657b83 guibg=NONE guisp=#fdf6e3 cterm=NONE,bold gui=NONE,bold
   hi IncSearch ctermfg=166 ctermbg=NONE guifg=#cb4b16 guibg=NONE guisp=NONE cterm=NONE,standout gui=NONE,standout
   hi LineNr ctermfg=247 ctermbg=NONE guifg=#93a1a1 guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi ModeMsg ctermfg=32 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi MoreMsg ctermfg=32 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
-  hi Pmenu ctermfg=254 ctermbg=66 guifg=#eee8d5 guibg=#657b83 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-  hi PmenuSbar ctermfg=254 ctermbg=247 guifg=#eee8d5 guibg=#93a1a1 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-  hi PmenuSel ctermfg=247 ctermbg=230 guifg=#93a1a1 guibg=#fdf6e3 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-  hi PmenuThumb ctermfg=246 ctermbg=230 guifg=#839496 guibg=#fdf6e3 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
+  hi Pmenu ctermfg=66 ctermbg=254 guifg=#657b83 guibg=#eee8d5 guisp=NONE cterm=NONE gui=NONE
+  hi PmenuSbar ctermfg=NONE ctermbg=254 guifg=NONE guibg=#eee8d5 guisp=NONE cterm=NONE gui=NONE
+  hi PmenuSel ctermfg=230 ctermbg=247 guifg=#fdf6e3 guibg=#93a1a1 guisp=NONE cterm=NONE gui=NONE
+  hi PmenuThumb ctermfg=NONE ctermbg=247 guifg=NONE guibg=#93a1a1 guisp=NONE cterm=NONE gui=NONE
   hi Question ctermfg=37 ctermbg=NONE guifg=#2aa198 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
   hi! link QuickFixLine Search
   hi Search ctermfg=136 ctermbg=NONE guifg=#b58900 guibg=NONE guisp=NONE cterm=NONE,reverse gui=NONE,reverse
@@ -518,7 +507,7 @@ if !get(g:, 'solarized_use16', 0)
   hi CommandMode ctermfg=254 ctermbg=162 guifg=#eee8d5 guibg=#d33682 guisp=NONE cterm=NONE,bold,reverse gui=NONE,bold,reverse
   hi! link StatusLineTerm StatusLine
   hi! link StatusLineTermNC StatusLineNC
-  hi VertSplit ctermfg=254 ctermbg=254 guifg=#eee8d5 guibg=#eee8d5 guisp=NONE cterm=NONE gui=NONE
+  hi VertSplit ctermfg=247 ctermbg=254 guifg=#93a1a1 guibg=#eee8d5 guisp=NONE cterm=NONE gui=NONE
   hi Visual ctermfg=247 ctermbg=230 guifg=#93a1a1 guibg=#fdf6e3 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
   hi VisualNOS ctermfg=NONE ctermbg=254 guifg=NONE guibg=#eee8d5 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
   hi WarningMsg ctermfg=166 ctermbg=NONE guifg=#cb4b16 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
@@ -531,7 +520,7 @@ if !get(g:, 'solarized_use16', 0)
   hi! link Define PreProc
   hi! link Debug Special
   hi! link Delimiter Special
-  hi Error ctermfg=160 ctermbg=NONE guifg=#dc322f guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
+  hi Error ctermfg=160 ctermbg=230 guifg=#dc322f guibg=#fdf6e3 guisp=NONE cterm=NONE,bold,reverse gui=NONE,bold,reverse
   hi! link Exception Statement
   hi! link Float Constant
   hi! link Function Identifier
@@ -612,6 +601,7 @@ if !get(g:, 'solarized_use16', 0)
     hi htmlSpecialTagName ctermfg=32 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE,italic
     hi htmlArg ctermfg=246 ctermbg=NONE guifg=#839496 guibg=NONE guisp=NONE cterm=NONE gui=NONE
     hi javaScript ctermfg=136 ctermbg=NONE guifg=#b58900 guibg=NONE guisp=NONE cterm=NONE gui=NONE
+    hi! link jsFuncCall Function
     hi perlHereDoc ctermfg=242 ctermbg=230 guifg=#586e75 guibg=#fdf6e3 guisp=NONE cterm=NONE gui=NONE
     hi perlVarPlain ctermfg=136 ctermbg=230 guifg=#b58900 guibg=#fdf6e3 guisp=NONE cterm=NONE gui=NONE
     hi perlStatementFileDesc ctermfg=37 ctermbg=230 guifg=#2aa198 guibg=#fdf6e3 guisp=NONE cterm=NONE gui=NONE
@@ -749,31 +739,33 @@ if !get(g:, 'solarized_use16', 0)
     hi pandocEmphasisTable cterm=italic
     hi pandocEmphasis cterm=italic
   endif
-  if has('nvim')
-    hi! link TermCursor Cursor
-    hi TermCursorNC ctermfg=230 ctermbg=247 guifg=#fdf6e3 guibg=#93a1a1 guisp=NONE cterm=NONE gui=NONE
-    let g:terminal_color_8='#fdf6e3'
-    let g:terminal_color_0='#eee8d5'
-    let g:terminal_color_10='#93a1a1'
-    let g:terminal_color_11='#839496'
-    let g:terminal_color_12='#657b83'
-    let g:terminal_color_14='#586e75'
-    let g:terminal_color_7='#073642'
-    let g:terminal_color_15='#002b36'
-    let g:terminal_color_3='#b58900'
-    let g:terminal_color_9='#cb4b16'
-    let g:terminal_color_1='#dc322f'
-    let g:terminal_color_5='#d33682'
-    let g:terminal_color_13='#6c71c4'
-    let g:terminal_color_4='#268bd2'
-    let g:terminal_color_6='#2aa198'
-    let g:terminal_color_2='#859900'
-  endif
   finish
 endif
 
 " 16-color variant
 if &background ==# 'dark'
+  let g:terminal_ansi_colors = ['#073642', '#dc322f', '#859900', '#b58900', '#268bd2', '#d33682', '#2aa198', '#eee8d5',
+        \ '#002b36', '#cb4b16', '#586e75', '#657b83', '#839496', '#6c71c4', '#93a1a1', '#fdf6e3']
+  if has('nvim')
+    hi! link TermCursor Cursor
+    hi TermCursorNC ctermfg=8 ctermbg=10 guifg=#002b36 guibg=#586e75 guisp=NONE cterm=NONE gui=NONE
+    let g:terminal_color_0='#073642'
+    let g:terminal_color_1='#dc322f'
+    let g:terminal_color_2='#859900'
+    let g:terminal_color_3='#b58900'
+    let g:terminal_color_4='#268bd2'
+    let g:terminal_color_5='#d33682'
+    let g:terminal_color_6='#2aa198'
+    let g:terminal_color_7='#eee8d5'
+    let g:terminal_color_8='#002b36'
+    let g:terminal_color_9='#cb4b16'
+    let g:terminal_color_10='#586e75'
+    let g:terminal_color_11='#657b83'
+    let g:terminal_color_12='#839496'
+    let g:terminal_color_13='#6c71c4'
+    let g:terminal_color_14='#93a1a1'
+    let g:terminal_color_15='#fdf6e3'
+  endif
   if !has('gui_running') && get(g:, 'solarized_termtrans', 0)
     hi Normal ctermfg=12 ctermbg=NONE guifg=#839496 guibg=NONE guisp=NONE cterm=NONE gui=NONE
     hi Terminal ctermfg=fg ctermbg=NONE guifg=fg guibg=NONE guisp=NONE cterm=NONE gui=NONE
@@ -844,10 +836,10 @@ if &background ==# 'dark'
   hi MatchParen ctermfg=15 ctermbg=0 guifg=#fdf6e3 guibg=#073642 guisp=NONE cterm=NONE,bold gui=NONE,bold
   hi ModeMsg ctermfg=4 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi MoreMsg ctermfg=4 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
-  hi Pmenu ctermfg=0 ctermbg=12 guifg=#073642 guibg=#839496 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-  hi PmenuSbar ctermfg=0 ctermbg=10 guifg=#073642 guibg=#586e75 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-  hi PmenuSel ctermfg=11 ctermbg=7 guifg=#657b83 guibg=#eee8d5 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-  hi PmenuThumb ctermfg=10 ctermbg=8 guifg=#586e75 guibg=#002b36 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
+  hi Pmenu ctermfg=12 ctermbg=0 guifg=#839496 guibg=#073642 guisp=NONE cterm=NONE gui=NONE
+  hi PmenuSbar ctermfg=NONE ctermbg=0 guifg=NONE guibg=#073642 guisp=NONE cterm=NONE gui=NONE
+  hi PmenuSel ctermfg=7 ctermbg=10 guifg=#eee8d5 guibg=#586e75 guisp=NONE cterm=NONE gui=NONE
+  hi PmenuThumb ctermfg=NONE ctermbg=10 guifg=NONE guibg=#586e75 guisp=NONE cterm=NONE gui=NONE
   hi Question ctermfg=6 ctermbg=NONE guifg=#2aa198 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
   hi! link QuickFixLine Search
   hi Search ctermfg=3 ctermbg=NONE guifg=#b58900 guibg=NONE guisp=NONE cterm=NONE,reverse gui=NONE,reverse
@@ -871,7 +863,7 @@ if &background ==# 'dark'
   hi CommandMode ctermfg=0 ctermbg=5 guifg=#073642 guibg=#d33682 guisp=NONE cterm=NONE,bold,reverse gui=NONE,bold,reverse
   hi! link StatusLineTerm StatusLine
   hi! link StatusLineTermNC StatusLineNC
-  hi VertSplit ctermfg=0 ctermbg=0 guifg=#073642 guibg=#073642 guisp=NONE cterm=NONE gui=NONE
+  hi VertSplit ctermfg=10 ctermbg=0 guifg=#586e75 guibg=#073642 guisp=NONE cterm=NONE gui=NONE
   hi Visual ctermfg=10 ctermbg=8 guifg=#586e75 guibg=#002b36 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
   hi VisualNOS ctermfg=NONE ctermbg=0 guifg=NONE guibg=#073642 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
   hi WarningMsg ctermfg=9 ctermbg=NONE guifg=#cb4b16 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
@@ -884,7 +876,7 @@ if &background ==# 'dark'
   hi! link Define PreProc
   hi! link Debug Special
   hi! link Delimiter Special
-  hi Error ctermfg=1 ctermbg=NONE guifg=#dc322f guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
+  hi Error ctermfg=1 ctermbg=15 guifg=#dc322f guibg=#fdf6e3 guisp=NONE cterm=NONE,bold,reverse gui=NONE,bold,reverse
   hi! link Exception Statement
   hi! link Float Constant
   hi! link Function Identifier
@@ -965,6 +957,7 @@ if &background ==# 'dark'
     hi htmlSpecialTagName ctermfg=4 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE,italic
     hi htmlArg ctermfg=11 ctermbg=NONE guifg=#657b83 guibg=NONE guisp=NONE cterm=NONE gui=NONE
     hi javaScript ctermfg=3 ctermbg=NONE guifg=#b58900 guibg=NONE guisp=NONE cterm=NONE gui=NONE
+    hi! link jsFuncCall Function
     hi perlHereDoc ctermfg=14 ctermbg=8 guifg=#93a1a1 guibg=#002b36 guisp=NONE cterm=NONE gui=NONE
     hi perlVarPlain ctermfg=3 ctermbg=8 guifg=#b58900 guibg=#002b36 guisp=NONE cterm=NONE gui=NONE
     hi perlStatementFileDesc ctermfg=6 ctermbg=8 guifg=#2aa198 guibg=#002b36 guisp=NONE cterm=NONE gui=NONE
@@ -1102,29 +1095,31 @@ if &background ==# 'dark'
     hi pandocEmphasisTable cterm=italic
     hi pandocEmphasis cterm=italic
   endif
-  if has('nvim')
-    hi! link TermCursor Cursor
-    hi TermCursorNC ctermfg=8 ctermbg=10 guifg=#002b36 guibg=#586e75 guisp=NONE cterm=NONE gui=NONE
-    let g:terminal_color_8='#002b36'
-    let g:terminal_color_0='#073642'
-    let g:terminal_color_10='#586e75'
-    let g:terminal_color_11='#657b83'
-    let g:terminal_color_12='#839496'
-    let g:terminal_color_14='#93a1a1'
-    let g:terminal_color_7='#eee8d5'
-    let g:terminal_color_15='#fdf6e3'
-    let g:terminal_color_3='#b58900'
-    let g:terminal_color_9='#cb4b16'
-    let g:terminal_color_1='#dc322f'
-    let g:terminal_color_5='#d33682'
-    let g:terminal_color_13='#6c71c4'
-    let g:terminal_color_4='#268bd2'
-    let g:terminal_color_6='#2aa198'
-    let g:terminal_color_2='#859900'
-  endif
   finish
 endif
 
+let g:terminal_ansi_colors = ['#073642', '#dc322f', '#859900', '#b58900', '#268bd2', '#d33682', '#2aa198', '#eee8d5',
+      \ '#002b36', '#cb4b16', '#586e75', '#657b83', '#839496', '#6c71c4', '#93a1a1', '#fdf6e3']
+if has('nvim')
+  hi! link TermCursor Cursor
+  hi TermCursorNC ctermfg=15 ctermbg=14 guifg=#fdf6e3 guibg=#93a1a1 guisp=NONE cterm=NONE gui=NONE
+  let g:terminal_color_0='#073642'
+  let g:terminal_color_1='#dc322f'
+  let g:terminal_color_2='#859900'
+  let g:terminal_color_3='#b58900'
+  let g:terminal_color_4='#268bd2'
+  let g:terminal_color_5='#d33682'
+  let g:terminal_color_6='#2aa198'
+  let g:terminal_color_7='#eee8d5'
+  let g:terminal_color_8='#002b36'
+  let g:terminal_color_9='#cb4b16'
+  let g:terminal_color_10='#586e75'
+  let g:terminal_color_11='#657b83'
+  let g:terminal_color_12='#839496'
+  let g:terminal_color_13='#6c71c4'
+  let g:terminal_color_14='#93a1a1'
+  let g:terminal_color_15='#fdf6e3'
+endif
 if !has('gui_running') && get(g:, 'solarized_termtrans', 0)
   hi Normal ctermfg=11 ctermbg=NONE guifg=#657b83 guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi Terminal ctermfg=fg ctermbg=NONE guifg=fg guibg=NONE guisp=NONE cterm=NONE gui=NONE
@@ -1200,17 +1195,17 @@ else
 endif
 hi Directory ctermfg=4 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
 hi EndOfBuffer ctermfg=NONE ctermbg=NONE guifg=NONE guibg=NONE guisp=NONE cterm=NONE gui=NONE
-hi ErrorMsg ctermfg=1 ctermbg=8 guifg=#dc322f guibg=#002b36 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
+hi ErrorMsg ctermfg=1 ctermbg=15 guifg=#dc322f guibg=#fdf6e3 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
 hi FoldColumn ctermfg=11 ctermbg=NONE guifg=#657b83 guibg=NONE guisp=NONE cterm=NONE gui=NONE
 hi Folded ctermfg=11 ctermbg=NONE guifg=#657b83 guibg=NONE guisp=#fdf6e3 cterm=NONE,bold gui=NONE,bold
 hi IncSearch ctermfg=9 ctermbg=NONE guifg=#cb4b16 guibg=NONE guisp=NONE cterm=NONE,standout gui=NONE,standout
 hi LineNr ctermfg=14 ctermbg=NONE guifg=#93a1a1 guibg=NONE guisp=NONE cterm=NONE gui=NONE
 hi ModeMsg ctermfg=4 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
 hi MoreMsg ctermfg=4 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE
-hi Pmenu ctermfg=7 ctermbg=11 guifg=#eee8d5 guibg=#657b83 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-hi PmenuSbar ctermfg=7 ctermbg=14 guifg=#eee8d5 guibg=#93a1a1 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-hi PmenuSel ctermfg=14 ctermbg=15 guifg=#93a1a1 guibg=#fdf6e3 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
-hi PmenuThumb ctermfg=12 ctermbg=15 guifg=#839496 guibg=#fdf6e3 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
+hi Pmenu ctermfg=11 ctermbg=7 guifg=#657b83 guibg=#eee8d5 guisp=NONE cterm=NONE gui=NONE
+hi PmenuSbar ctermfg=NONE ctermbg=7 guifg=NONE guibg=#eee8d5 guisp=NONE cterm=NONE gui=NONE
+hi PmenuSel ctermfg=15 ctermbg=14 guifg=#fdf6e3 guibg=#93a1a1 guisp=NONE cterm=NONE gui=NONE
+hi PmenuThumb ctermfg=NONE ctermbg=14 guifg=NONE guibg=#93a1a1 guisp=NONE cterm=NONE gui=NONE
 hi Question ctermfg=6 ctermbg=NONE guifg=#2aa198 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
 hi! link QuickFixLine Search
 hi Search ctermfg=3 ctermbg=NONE guifg=#b58900 guibg=NONE guisp=NONE cterm=NONE,reverse gui=NONE,reverse
@@ -1234,7 +1229,7 @@ hi VisualMode ctermfg=7 ctermbg=5 guifg=#eee8d5 guibg=#d33682 guisp=NONE cterm=N
 hi CommandMode ctermfg=7 ctermbg=5 guifg=#eee8d5 guibg=#d33682 guisp=NONE cterm=NONE,bold,reverse gui=NONE,bold,reverse
 hi! link StatusLineTerm StatusLine
 hi! link StatusLineTermNC StatusLineNC
-hi VertSplit ctermfg=7 ctermbg=7 guifg=#eee8d5 guibg=#eee8d5 guisp=NONE cterm=NONE gui=NONE
+hi VertSplit ctermfg=14 ctermbg=7 guifg=#93a1a1 guibg=#eee8d5 guisp=NONE cterm=NONE gui=NONE
 hi Visual ctermfg=14 ctermbg=15 guifg=#93a1a1 guibg=#fdf6e3 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
 hi VisualNOS ctermfg=NONE ctermbg=7 guifg=NONE guibg=#eee8d5 guisp=NONE cterm=NONE,reverse gui=NONE,reverse
 hi WarningMsg ctermfg=9 ctermbg=NONE guifg=#cb4b16 guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
@@ -1247,7 +1242,7 @@ hi Constant ctermfg=6 ctermbg=NONE guifg=#2aa198 guibg=NONE guisp=NONE cterm=NON
 hi! link Define PreProc
 hi! link Debug Special
 hi! link Delimiter Special
-hi Error ctermfg=1 ctermbg=NONE guifg=#dc322f guibg=NONE guisp=NONE cterm=NONE,bold gui=NONE,bold
+hi Error ctermfg=1 ctermbg=15 guifg=#dc322f guibg=#fdf6e3 guisp=NONE cterm=NONE,bold,reverse gui=NONE,bold,reverse
 hi! link Exception Statement
 hi! link Float Constant
 hi! link Function Identifier
@@ -1328,6 +1323,7 @@ if get(g:, 'solarized_extra_hi_groups', 0)
   hi htmlSpecialTagName ctermfg=4 ctermbg=NONE guifg=#268bd2 guibg=NONE guisp=NONE cterm=NONE gui=NONE,italic
   hi htmlArg ctermfg=12 ctermbg=NONE guifg=#839496 guibg=NONE guisp=NONE cterm=NONE gui=NONE
   hi javaScript ctermfg=3 ctermbg=NONE guifg=#b58900 guibg=NONE guisp=NONE cterm=NONE gui=NONE
+  hi! link jsFuncCall Function
   hi perlHereDoc ctermfg=10 ctermbg=15 guifg=#586e75 guibg=#fdf6e3 guisp=NONE cterm=NONE gui=NONE
   hi perlVarPlain ctermfg=3 ctermbg=15 guifg=#b58900 guibg=#fdf6e3 guisp=NONE cterm=NONE gui=NONE
   hi perlStatementFileDesc ctermfg=6 ctermbg=15 guifg=#2aa198 guibg=#fdf6e3 guisp=NONE cterm=NONE gui=NONE
@@ -1465,26 +1461,6 @@ if get(g:, "solarized_term_italics", 0)
   hi pandocEmphasisTable cterm=italic
   hi pandocEmphasis cterm=italic
 endif
-if has('nvim')
-  hi! link TermCursor Cursor
-  hi TermCursorNC ctermfg=15 ctermbg=14 guifg=#fdf6e3 guibg=#93a1a1 guisp=NONE cterm=NONE gui=NONE
-  let g:terminal_color_8='#fdf6e3'
-  let g:terminal_color_0='#eee8d5'
-  let g:terminal_color_10='#93a1a1'
-  let g:terminal_color_11='#839496'
-  let g:terminal_color_12='#657b83'
-  let g:terminal_color_14='#586e75'
-  let g:terminal_color_7='#073642'
-  let g:terminal_color_15='#002b36'
-  let g:terminal_color_3='#b58900'
-  let g:terminal_color_9='#cb4b16'
-  let g:terminal_color_1='#dc322f'
-  let g:terminal_color_5='#d33682'
-  let g:terminal_color_13='#6c71c4'
-  let g:terminal_color_4='#268bd2'
-  let g:terminal_color_6='#2aa198'
-  let g:terminal_color_2='#859900'
-endif
 finish
 
 " Background: dark
@@ -1505,6 +1481,8 @@ finish
 " Color: cyan                 #2aa198                ~        6
 " Color: green                #859900                ~        2
 " Color: back                 #002b36                ~        8
+" TermCursor        -> Cursor
+" TermCursorNC         base03            base01
 "   Normal             base0             none
 "   Terminal           fg                none
 "   Normal            base0             back
@@ -1561,10 +1539,10 @@ finish
 " MatchParen           base3             base02            bold
 " ModeMsg              blue              none
 " MoreMsg              blue              none
-" Pmenu                base02            base0             reverse
-" PmenuSbar            base02            base01            reverse
-" PmenuSel             base00            base2             reverse
-" PmenuThumb           base01            base03            reverse
+" Pmenu                base0             base02
+" PmenuSbar            none              base02
+" PmenuSel             base2             base01
+" PmenuThumb           none              base01
 " Question             cyan              none              bold
 " QuickFixLine     ->  Search
 " Search               yellow            none              reverse
@@ -1585,7 +1563,7 @@ finish
 " CommandMode          base02            magenta           bold,reverse
 " StatusLineTerm    -> StatusLine
 " StatusLineTermNC  -> StatusLineNC
-" VertSplit            base02            base02
+" VertSplit            base01            base02
 " Visual               base01            base03            reverse
 " VisualNOS            none              base02            reverse
 " WarningMsg           orange            none              bold
@@ -1598,7 +1576,7 @@ finish
 " Define            -> PreProc
 " Debug             -> Special
 " Delimiter         -> Special
-" Error                red               none              bold
+" Error                red               base3             bold,reverse
 " Exception         -> Statement
 " Float             -> Constant
 " Function          -> Identifier
@@ -1678,6 +1656,7 @@ finish
 " htmlSpecialTagName         blue            none              g=italic
 " htmlArg                    base00          none
 " javaScript                 yellow          none
+" jsFuncCall              -> Function
 " perlHereDoc                base1           back
 " perlVarPlain               yellow          back
 " perlStatementFileDesc      cyan            back
@@ -1803,8 +1782,6 @@ finish
 " pandocMetadataKey                      blue               none
 " pandocMetadata                         blue               none           bold
 " pandocMetadataTitle                 -> pandocMetadata
-" TermCursor        -> Cursor
-" TermCursorNC         base03            base01
 " Background: light
 " Color: base3                #002b36                ~        8
 " Color: base2                #073642                ~        0
@@ -1823,6 +1800,8 @@ finish
 " Color: cyan                 #2aa198                ~        6
 " Color: green                #859900                ~        2
 " Color: back                 #fdf6e3                ~        15
+" TermCursor        -> Cursor
+" TermCursorNC         base03            base01
 "   Normal             base0             none
 "   Terminal           fg                none
 "   Normal            base0             back
@@ -1878,17 +1857,17 @@ finish
 " DiffText             blue              base02            s=blue
 " Directory            blue              none
 " EndOfBuffer          none              none
-" ErrorMsg             red               base3             reverse
+" ErrorMsg             red               base03            reverse
 " FoldColumn           base0             none
 " Folded               base0             none              bold s=base03
 " IncSearch            orange            none              standout
 " LineNr               base01            none
 " ModeMsg              blue              none
 " MoreMsg              blue              none
-" Pmenu                base02            base0             reverse
-" PmenuSbar            base02            base01            reverse
-" PmenuSel             base01            base03            reverse
-" PmenuThumb           base00            base03            reverse
+" Pmenu                base0             base02
+" PmenuSbar            none              base02
+" PmenuSel             base03            base01
+" PmenuThumb           none              base01
 " Question             cyan              none              bold
 " QuickFixLine     ->  Search
 " Search               yellow            none              reverse
@@ -1909,7 +1888,7 @@ finish
 " CommandMode          base02            magenta           bold,reverse
 " StatusLineTerm    -> StatusLine
 " StatusLineTermNC  -> StatusLineNC
-" VertSplit            base02            base02
+" VertSplit            base01            base02
 " Visual               base01            base03            reverse
 " VisualNOS            none              base02            reverse
 " WarningMsg           orange            none              bold
@@ -1922,7 +1901,7 @@ finish
 " Define            -> PreProc
 " Debug             -> Special
 " Delimiter         -> Special
-" Error                red               none              bold
+" Error                red               base03            bold,reverse
 " Exception         -> Statement
 " Float             -> Constant
 " Function          -> Identifier
@@ -2002,6 +1981,7 @@ finish
 " htmlSpecialTagName         blue            none              g=italic
 " htmlArg                    base00          none
 " javaScript                 yellow          none
+" jsFuncCall              -> Function
 " perlHereDoc                base1           back
 " perlVarPlain               yellow          back
 " perlStatementFileDesc      cyan            back
@@ -2127,5 +2107,3 @@ finish
 " pandocMetadataKey                      blue               none
 " pandocMetadata                         blue               none           bold
 " pandocMetadataTitle                 -> pandocMetadata
-" TermCursor        -> Cursor
-" TermCursorNC         base03            base01

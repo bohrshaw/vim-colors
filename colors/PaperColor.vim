@@ -105,8 +105,8 @@ fun! s:register_default_theme()
         \       'buftabline_bg':          ['#005f87', '24'],
         \       'buftabline_current_fg':  ['#444444', '238'],
         \       'buftabline_current_bg':  ['#e4e4e4', '254'],
-        \       'buftabline_active_fg': ['#eeeeee', '255'],
-        \       'buftabline_active_bg': ['#005faf', '25'],
+        \       'buftabline_active_fg':   ['#eeeeee', '255'],
+        \       'buftabline_active_bg':   ['#005faf', '25'],
         \       'buftabline_inactive_fg': ['#eeeeee', '255'],
         \       'buftabline_inactive_bg': ['#0087af', '31']
         \     }
@@ -175,11 +175,6 @@ fun! s:register_default_theme()
         \       'folded_bg' : ['#5f005f', '53'],
         \       'wildmenu_fg': ['#1c1c1c', '234'],
         \       'wildmenu_bg': ['#afd700', '148'],
-        \       'tabline_bg':          ['#262626', '235'],
-        \       'tabline_active_fg':   ['#121212', '233'],
-        \       'tabline_active_bg':   ['#00afaf', '37'],
-        \       'tabline_inactive_fg': ['#bcbcbc', '250'],
-        \       'tabline_inactive_bg': ['#585858', '240'],
         \       'spellbad':   ['#5f0000', '52'],
         \       'spellcap':   ['#5f005f', '53'],
         \       'spellrare':  ['#005f00', '22'],
@@ -191,7 +186,19 @@ fun! s:register_default_theme()
         \       'difftext_fg':   ['#5fffff', '87'],
         \       'difftext_bg':   ['#008787', '30'],
         \       'diffchange_fg': ['#d0d0d0', '252'],
-        \       'diffchange_bg': ['#005f5f', '23']
+        \       'diffchange_bg': ['#005f5f', '23'],
+        \       'tabline_bg':          ['#262626', '235'],
+        \       'tabline_active_fg':   ['#121212', '233'],
+        \       'tabline_active_bg':   ['#00afaf', '37'],
+        \       'tabline_inactive_fg': ['#bcbcbc', '250'],
+        \       'tabline_inactive_bg': ['#585858', '240'],
+        \       'buftabline_bg':          ['#262626', '235'],
+        \       'buftabline_current_fg':  ['#121212', '233'],
+        \       'buftabline_current_bg':  ['#00afaf', '37'],
+        \       'buftabline_active_fg':   ['#00afaf', '37'],
+        \       'buftabline_active_bg':   ['#585858', '240'],
+        \       'buftabline_inactive_fg': ['#bcbcbc', '250'],
+        \       'buftabline_inactive_bg': ['#585858', '240']
         \     }
         \   }
 endfun
@@ -200,7 +207,7 @@ endfun
 
 " Acquire Theme Data: {{{
 
-" Brief: 
+" Brief:
 "   Function to get theme information and store in variables for other
 "   functions to use
 "
@@ -212,13 +219,13 @@ endfun
 "   g:PaperColor_Theme_Options            <dictionary>  user options
 "
 " Expose:
-"   s:theme_name       <string>     the name of the selected theme 
+"   s:theme_name       <string>     the name of the selected theme
 "   s:selected_theme   <dictionary> the selected theme object (contains palette, etc.)
 "   s:selected_variant <string>     'light' or 'dark'
 "   s:palette          <dictionary> the palette of selected theme
 "   s:options          <dictionary> user options
 fun! s:acquire_theme_data()
-  
+
   " Get theme name: {{{
   let s:theme_name = 'default'
 
@@ -336,8 +343,8 @@ endfun
 fun! s:generate_theme_option_variables()
   " 0. All possible theme option names must be registered here
   let l:available_theme_options = [
-        \ 'allow_bold', 
-        \ 'allow_italic', 
+        \ 'allow_bold',
+        \ 'allow_italic',
         \ 'transparent_background',
         \ ]
 
@@ -375,7 +382,7 @@ fun! s:generate_theme_option_variables()
   if has_key(s:options, 'theme')
     let s:theme_options = s:options['theme']
   endif
-  
+
   " 3.1 In case user sets for a theme without specifying which variant
   if has_key(s:theme_options, s:theme_name)
     let l:theme_options = s:theme_options[s:theme_name]
@@ -387,7 +394,7 @@ fun! s:generate_theme_option_variables()
 
 
   " 3.2 In case user sets for a specific variant of a theme
-  
+
   " Create the string that the user might have set for this theme variant
   " for example, 'default.dark'
   let l:specific_theme_variant = s:theme_name . '.' . s:selected_variant
@@ -449,7 +456,7 @@ fun! s:set_overriding_colors()
       if !empty(s:themeOpt_override)
         call s:load_GUI_to_256_converter()
       endif
- 
+
       for l:color in keys(s:themeOpt_override)
         let l:value = s:themeOpt_override[l:color]
         if l:value[1] == ''
@@ -485,7 +492,7 @@ endfun
 " Expose:
 "   s:langOpt_[LANGUAGE]__[OPTION]  <any>   variables for language options
 "
-" Example: 
+" Example:
 "     g:PaperColor_Theme_Options has something like this:
 "       'language': {
 "       \   'python': {
@@ -511,10 +518,10 @@ fun! s:generate_language_option_variables()
   " Part of user-config options
   if has_key(s:options, 'language')
     let l:language_options = s:options['language']
-    " echo l:language_options 
+    " echo l:language_options
     for l:lang in keys(l:language_options)
       let l:options = l:language_options[l:lang]
-      " echo l:lang 
+      " echo l:lang
       " echo l:options
       for l:option in keys(l:options)
         let s:{'langOpt_' . l:lang . '__' . l:option} = l:options[l:option]
@@ -800,11 +807,11 @@ endfun
 fun! s:set_format_attributes()
   " These are the default
   if s:mode == s:MODE_GUI_COLOR
-    let s:ft_bold    = " gui=bold "
-    let s:ft_none    = " gui=none "
-    let s:ft_reverse = " gui=reverse "
-    let s:ft_italic  = " gui=italic "
-    let s:ft_italic_bold = " gui=italic,bold "
+    let s:ft_bold    = " cterm=bold gui=bold "
+    let s:ft_none    = " cterm=none gui=none "
+    let s:ft_reverse = " cterm=reverse gui=reverse "
+    let s:ft_italic  = " cterm=italic gui=italic "
+    let s:ft_italic_bold = " cterm=italic,bold gui=italic,bold "
   elseif s:mode == s:MODE_256_COLOR
     let s:ft_bold    = " cterm=bold "
     let s:ft_none    = " cterm=none "
@@ -1123,6 +1130,7 @@ fun! s:apply_syntax_highlightings()
     " Switching between dark & light variant through `set background`
     if s:is_dark " DARK VARIANT
       set background=dark
+      exec 'hi EndOfBuffer' . s:fg_cursor_fg  . s:ft_none
     else " LIGHT VARIANT
       set background=light
     endif
@@ -1139,6 +1147,8 @@ fun! s:apply_syntax_highlightings()
   exec 'hi Search' . s:fg_search_fg . s:bg_search_bg
   exec 'hi StatusLine' . s:fg_statusline_active_bg . s:bg_statusline_active_fg
   exec 'hi StatusLineNC' . s:fg_statusline_inactive_bg . s:bg_statusline_inactive_fg
+  exec 'hi StatusLineTerm' . s:fg_statusline_active_bg . s:bg_statusline_active_fg
+  exec 'hi StatusLineTermNC' . s:fg_statusline_inactive_bg . s:bg_statusline_inactive_fg
   exec 'hi Visual' . s:fg_visual_fg . s:bg_visual_bg
   exec 'hi Directory' . s:fg_blue
   exec 'hi ModeMsg' . s:fg_olive
@@ -1269,18 +1279,42 @@ fun! s:apply_syntax_highlightings()
   exec 'hi makeCommands' . s:fg_foreground
   exec 'hi makeSpecial' . s:fg_orange . s:ft_bold
 
-  " CMake Highlighting
-  exec 'hi cmakeStatement' . s:fg_pink
+  " CMake Highlighting (Builtin)
+  exec 'hi cmakeStatement' . s:fg_blue
   exec 'hi cmakeArguments' . s:fg_foreground
-  exec 'hi cmakeVariableValue' . s:fg_blue
-  exec 'hi cmakeOperators' . s:fg_red
+  exec 'hi cmakeVariableValue' . s:fg_pink
+
+  " CMake Highlighting (Plugin: https://github.com/pboettch/vim-cmake-syntax)
+  exec 'hi cmakeCommand' . s:fg_blue
+  exec 'hi cmakeCommandConditional' . s:fg_purple . s:ft_bold
+  exec 'hi cmakeKWset' . s:fg_orange
+  exec 'hi cmakeKWvariable_watch' . s:fg_orange
+  exec 'hi cmakeKWif' . s:fg_orange
+  exec 'hi cmakeArguments' . s:fg_foreground
+  exec 'hi cmakeKWproject' . s:fg_pink
+  exec 'hi cmakeGeneratorExpressions' . s:fg_orange
+  exec 'hi cmakeGeneratorExpression' . s:fg_aqua
+  exec 'hi cmakeVariable' . s:fg_pink
+  exec 'hi cmakeProperty' . s:fg_aqua
+  exec 'hi cmakeKWforeach' . s:fg_aqua
+  exec 'hi cmakeKWunset' . s:fg_aqua
+  exec 'hi cmakeKWmacro' . s:fg_aqua
+  exec 'hi cmakeKWget_property' . s:fg_aqua
+  exec 'hi cmakeKWset_tests_properties' . s:fg_aqua
+  exec 'hi cmakeKWmessage' . s:fg_aqua
+  exec 'hi cmakeKWinstall_targets' . s:fg_orange
+  exec 'hi cmakeKWsource_group' . s:fg_orange
+  exec 'hi cmakeKWfind_package' . s:fg_aqua
+  exec 'hi cmakeKWstring' . s:fg_olive
+  exec 'hi cmakeKWinstall' . s:fg_aqua
+  exec 'hi cmakeKWtarget_sources' . s:fg_orange
 
   " C Highlighting
   exec 'hi cType' . s:fg_pink . s:ft_bold
   exec 'hi cFormat' . s:fg_olive
   exec 'hi cStorageClass' . s:fg_navy . s:ft_bold
 
-  exec 'hi cBoolean' . s:fg_green
+  exec 'hi cBoolean' . s:fg_green . s:ft_bold
   exec 'hi cCharacter' . s:fg_olive
   exec 'hi cConstant' . s:fg_green . s:ft_bold
   exec 'hi cConditional' . s:fg_purple . s:ft_bold
@@ -1311,7 +1345,7 @@ fun! s:apply_syntax_highlightings()
   endif
 
   " CPP highlighting
-  exec 'hi cppBoolean' . s:fg_navy
+  exec 'hi cppBoolean' . s:fg_green . s:ft_bold
   exec 'hi cppSTLnamespace' . s:fg_purple
   exec 'hi cppSTLexception' . s:fg_pink
   exec 'hi cppSTLfunctional' . s:fg_foreground . s:ft_bold
@@ -1319,7 +1353,7 @@ fun! s:apply_syntax_highlightings()
   exec 'hi cppExceptions' . s:fg_red
   exec 'hi cppStatement' . s:fg_blue
   exec 'hi cppStorageClass' . s:fg_navy . s:ft_bold
-  exec 'hi cppAccess' . s:fg_blue
+  exec 'hi cppAccess' . s:fg_orange . s:ft_bold
   if s:langOpt_cpp__highlight_standard_library == 1
     exec 'hi cppSTLconstant' . s:fg_green . s:ft_bold
     exec 'hi cppSTLtype' . s:fg_pink . s:ft_bold
@@ -1333,6 +1367,24 @@ fun! s:apply_syntax_highlightings()
   endif
   " exec 'hi cppSTL' . s:fg_blue
 
+  " Rust highlighting
+  exec 'hi rustKeyword' . s:fg_pink
+  exec 'hi rustModPath' . s:fg_blue
+  exec 'hi rustModPathSep' . s:fg_blue
+  exec 'hi rustLifetime' . s:fg_purple
+  exec 'hi rustStructure' . s:fg_aqua . s:ft_bold
+  exec 'hi rustAttribute' . s:fg_aqua . s:ft_bold
+  exec 'hi rustPanic' . s:fg_olive . s:ft_bold
+  exec 'hi rustTrait' . s:fg_blue . s:ft_bold
+  exec 'hi rustEnum' . s:fg_green . s:ft_bold
+  exec 'hi rustEnumVariant' . s:fg_green
+  exec 'hi rustSelf' . s:fg_orange
+  exec 'hi rustSigil' . s:fg_aqua . s:ft_bold
+  exec 'hi rustOperator' . s:fg_aqua . s:ft_bold
+  exec 'hi rustMacro' . s:fg_olive . s:ft_bold
+  exec 'hi rustMacroVariable' . s:fg_olive
+  exec 'hi rustAssert' . s:fg_olive . s:ft_bold
+  exec 'hi rustConditional' . s:fg_purple . s:ft_bold
 
   " Lex highlighting
   exec 'hi lexCFunctions' . s:fg_foreground
@@ -1403,6 +1455,18 @@ fun! s:apply_syntax_highlightings()
   exec 'hi shSetList' . s:fg_navy
   " @see Dockerfile Highlighting section for more sh*
 
+  " PowerShell Highlighting
+  exec 'hi ps1Type' . s:fg_green . s:ft_bold
+  exec 'hi ps1Variable' . s:fg_navy
+  exec 'hi ps1Boolean' . s:fg_navy . s:ft_bold
+  exec 'hi ps1FunctionInvocation' . s:fg_pink
+  exec 'hi ps1FunctionDeclaration' . s:fg_pink
+  exec 'hi ps1Keyword' . s:fg_blue . s:ft_bold
+  exec 'hi ps1Exception' . s:fg_red
+  exec 'hi ps1Operator' . s:fg_aqua . s:ft_bold
+  exec 'hi ps1CommentDoc' . s:fg_purple
+  exec 'hi ps1CDocParam' . s:fg_orange
+
   " HTML Highlighting
   exec 'hi htmlTitle' . s:fg_green . s:ft_bold
   exec 'hi htmlH1' . s:fg_green . s:ft_bold
@@ -1459,7 +1523,7 @@ fun! s:apply_syntax_highlightings()
   exec 'hi mkdLink' . s:fg_blue . s:ft_bold
   exec 'hi mkdURL' . s:fg_comment
   exec 'hi mkdString' . s:fg_foreground
-  exec 'hi mkdBlockQuote' . s:fg_foreground . s:bg_popupmenu_bg
+  exec 'hi mkdBlockQuote' . s:fg_pink
   exec 'hi mkdLinkTitle' . s:fg_pink
   exec 'hi mkdDelimiter' . s:fg_aqua
   exec 'hi mkdRule' . s:fg_pink
@@ -1546,6 +1610,19 @@ fun! s:apply_syntax_highlightings()
   exec 'hi jsBraces' . s:fg_blue
   exec 'hi jsNoise' . s:fg_blue
 
+  " Jsx Highlighting
+  " @target https://github.com/MaxMEllon/vim-jsx-pretty
+  exec 'hi jsxTagName' . s:fg_wine
+  exec 'hi jsxComponentName' . s:fg_wine
+  exec 'hi jsxAttrib' . s:fg_pink
+  exec 'hi jsxEqual' . s:fg_comment
+  exec 'hi jsxString' . s:fg_blue
+  exec 'hi jsxCloseTag' . s:fg_comment
+  exec 'hi jsxCloseString' . s:fg_comment
+  exec 'hi jsxDot' . s:fg_wine
+  exec 'hi jsxNamespace' . s:fg_wine
+  exec 'hi jsxPunct' . s:fg_comment
+
   " Json Highlighting
   " @target https://github.com/elzr/vim-json
   exec 'hi jsonKeyword' . s:fg_blue
@@ -1557,7 +1634,7 @@ fun! s:apply_syntax_highlightings()
   exec 'hi jsonNumber' . s:fg_orange
   exec 'hi jsonNull' . s:fg_purple . s:ft_bold
   exec 'hi jsonBoolean' . s:fg_green . s:ft_bold
-  exec 'hi jsonCommentError' . s:fg_pink . s:bg_background 
+  exec 'hi jsonCommentError' . s:fg_pink . s:bg_background
 
   " Go Highlighting
   exec 'hi goDirective' . s:fg_red
@@ -1685,14 +1762,25 @@ fun! s:apply_syntax_highlightings()
   exec 'hi rubyBoolean' . s:fg_green . s:ft_bold
 
   " Fortran Highlighting
-  exec 'hi fortranUnitHeader' . s:fg_foreground . s:ft_bold
+  exec 'hi fortranUnitHeader' . s:fg_blue . s:ft_bold
+  exec 'hi fortranIntrinsic' . s:fg_blue . s:bg_background . s:ft_none
   exec 'hi fortranType' . s:fg_pink . s:ft_bold
-  exec 'hi fortranStructure' . s:fg_blue . s:ft_bold
+  exec 'hi fortranTypeOb' . s:fg_pink . s:ft_bold
+  exec 'hi fortranStructure' . s:fg_aqua
   exec 'hi fortranStorageClass' . s:fg_navy . s:ft_bold
   exec 'hi fortranStorageClassR' . s:fg_navy . s:ft_bold
   exec 'hi fortranKeyword' . s:fg_pink
-  exec 'hi fortranReadWrite' . s:fg_blue
+  exec 'hi fortranReadWrite' . s:fg_aqua . s:ft_bold
   exec 'hi fortranIO' . s:fg_navy
+  exec 'hi fortranOperator' . s:fg_aqua . s:ft_bold
+  exec 'hi fortranCall' . s:fg_aqua . s:ft_bold
+  exec 'hi fortranContinueMark' . s:fg_green
+
+  " ALGOL Highlighting (Plugin: https://github.com/sterpe/vim-algol68)
+  exec 'hi algol68Statement' . s:fg_blue . s:ft_bold
+  exec 'hi algol68Operator' . s:fg_aqua . s:ft_bold
+  exec 'hi algol68PreProc' . s:fg_green
+  exec 'hi algol68Function' . s:fg_blue
 
   " R Highlighting
   exec 'hi rType' . s:fg_blue
@@ -1943,6 +2031,56 @@ fun! s:apply_syntax_highlightings()
   exec 'hi awkExpression' . s:fg_foreground
   exec 'hi awkSpecialPrintf' . s:fg_olive . s:ft_bold
 
+  " Elm highlighting
+  exec 'hi elmImport' . s:fg_navy
+  exec 'hi elmAlias' . s:fg_aqua
+  exec 'hi elmType' . s:fg_pink
+  exec 'hi elmOperator' . s:fg_aqua . s:ft_bold
+  exec 'hi elmBraces' . s:fg_aqua . s:ft_bold
+  exec 'hi elmTypedef' . s:fg_blue .  s:ft_bold
+  exec 'hi elmTopLevelDecl' . s:fg_green . s:ft_bold
+
+  " Purescript highlighting
+  exec 'hi purescriptModuleKeyword' . s:fg_navy
+  exec 'hi purescriptImportKeyword' . s:fg_navy
+  exec 'hi purescriptModuleName' . s:fg_pink
+  exec 'hi purescriptOperator' . s:fg_aqua . s:ft_bold
+  exec 'hi purescriptType' . s:fg_pink
+  exec 'hi purescriptTypeVar' . s:fg_navy
+  exec 'hi purescriptStructure' . s:fg_blue . s:ft_bold
+  exec 'hi purescriptLet' . s:fg_blue . s:ft_bold
+  exec 'hi purescriptFunction' . s:fg_green . s:ft_bold
+  exec 'hi purescriptDelimiter' . s:fg_aqua . s:ft_bold
+  exec 'hi purescriptStatement' . s:fg_purple . s:ft_bold
+  exec 'hi purescriptConstructor' . s:fg_pink
+  exec 'hi purescriptWhere' . s:fg_purple . s:ft_bold
+
+  " F# highlighting
+  exec 'hi fsharpTypeName' . s:fg_pink
+  exec 'hi fsharpCoreClass' . s:fg_pink
+  exec 'hi fsharpType' . s:fg_pink
+  exec 'hi fsharpKeyword' . s:fg_blue . s:ft_bold
+  exec 'hi fsharpOperator' . s:fg_aqua . s:ft_bold
+  exec 'hi fsharpBoolean' . s:fg_green . s:ft_bold
+  exec 'hi fsharpFormat' . s:fg_foreground
+  exec 'hi fsharpLinq' . s:fg_blue
+  exec 'hi fsharpKeyChar' . s:fg_aqua . s:ft_bold
+  exec 'hi fsharpOption' . s:fg_orange
+  exec 'hi fsharpCoreMethod' . s:fg_purple
+  exec 'hi fsharpAttrib' . s:fg_orange
+  exec 'hi fsharpModifier' . s:fg_aqua
+  exec 'hi fsharpOpen' . s:fg_red
+
+  " ASN.1 highlighting
+  exec 'hi asnExternal' . s:fg_green . s:ft_bold
+  exec 'hi asnTagModifier' . s:fg_purple
+  exec 'hi asnBraces' . s:fg_aqua . s:ft_bold
+  exec 'hi asnDefinition' . s:fg_foreground
+  exec 'hi asnStructure' . s:fg_blue
+  exec 'hi asnType' . s:fg_pink
+  exec 'hi asnTypeInfo' . s:fg_aqua . s:ft_bold
+  exec 'hi asnFieldOption' . s:fg_purple
+
   " }}}
 
   " Plugin: Netrw
@@ -1969,7 +2107,7 @@ fun! s:apply_syntax_highlightings()
   exec 'hi NERDTreeDirSlash' . s:fg_pink
   exec 'hi NERDTreeFile' . s:fg_foreground
   exec 'hi NERDTreeExecFile' . s:fg_green
-  exec 'hi NERDTreeOpenable' . s:fg_pink . s:ft_bold
+  exec 'hi NERDTreeOpenable' . s:fg_aqua . s:ft_bold
   exec 'hi NERDTreeClosable' . s:fg_pink
 
   " Plugin: Tagbar
@@ -2033,12 +2171,16 @@ fun! s:apply_syntax_highlightings()
   exec 'hi gitcommitUntrackedFile' . s:fg_diffdelete_fg
   exec 'hi gitcommitBranch' . s:fg_aqua . s:ft_bold
   exec 'hi gitcommitDiscardedType' . s:fg_diffdelete_fg
+  exec 'hi gitcommitDiff' . s:fg_comment
 
-  exec 'hi diffFile' . s:fg_aqua . s:ft_bold
-  exec 'hi diffIndexLine' . s:fg_purple
+  exec 'hi diffFile' . s:fg_blue
+  exec 'hi diffSubname' . s:fg_comment
+  exec 'hi diffIndexLine' . s:fg_comment
   exec 'hi diffAdded' . s:fg_diffadd_fg
   exec 'hi diffRemoved' . s:fg_diffdelete_fg
-  exec 'hi diffLine' . s:fg_orange . s:ft_bold
+  exec 'hi diffLine' . s:fg_orange
+  exec 'hi diffBDiffer' . s:fg_orange
+  exec 'hi diffNewFile' . s:fg_comment
 
 endfun
 " }}}

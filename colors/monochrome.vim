@@ -91,7 +91,7 @@ call s:hi('Folded')
 call s:hi('LineNr', s:dgray)
 
 " Small arrow used for tabs.
-call s:hi('SpecialKey', s:default_fg, s:default_bg, s:bold)
+call s:hi('SpecialKey', s:sblue, s:default_bg, s:bold)
 
 " File browsers.
 call s:hi('Directory', s:white, s:default_bg, s:bold)
@@ -108,6 +108,8 @@ call s:hi('PmenuSel', s:sblue, s:white)
 " Notes.
 call s:hi('Todo', s:black, s:yellow, s:bold)
 
+" Signs.
+call s:hi('SignColumn')
 
 "
 " --- Programming languages ----------------------------------------------------

@@ -360,6 +360,15 @@ call GoodWolfHL('InterestingWord6', 'coal', 'taffy')
 call GoodWolfHL('level1c',  'mediumgravel', '', 'bold')
 
 " }}}
+" Fugitive {{{
+
+call GoodWolfHL('fugitiveHeading', 'dress', 'bg', 'bold')
+call GoodWolfHL('fugitiveHeader', 'dress', 'bg', 'bold')
+call GoodWolfHL('fugitiveCount', 'plain', 'bg', 'bold')
+call GoodWolfHL('fugitiveSymbolicRef', 'dirtyblonde', 'bg', 'none')
+call GoodWolfHL('fugitiveModifier', 'dirtyblonde', 'bg', 'bold')
+
+" }}}
 
 " }}}
 " Filetype-specific {{{
@@ -510,6 +519,14 @@ call GoodWolfHL('pythonPrecondit',   'plain', '', 'none')
 call GoodWolfHL('pythonDecorator',   'plain', '', 'none')
 call GoodWolfHL('pythonRun',         'plain', '', 'none')
 call GoodWolfHL('pythonCoding',      'plain', '', 'bold')
+
+" }}}
+" Scala {{{
+
+call GoodWolfHL('scalaParameterAnnotation', 'gravel', '', 'bold')
+call GoodWolfHL('scalaParamAnnotationValue', 'gravel', '', 'bold')
+call GoodWolfHL('scalaCommentAnnotation', 'gravel', '', 'bold')
+call GoodWolfHL('scalaDocLinks', 'gravel', '', 'bold')
 
 " }}}
 " Vim {{{
