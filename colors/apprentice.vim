@@ -2,9 +2,9 @@
 " Author:      Romain Lafourcade (romainlafourcade@gmail.com)
 " Webpage:     https://github.com/romainl/Apprentice
 " Description: Essentially a streamlining and conversion to xterm colors of 'sorcerer' by Jeet Sukumaran (jeetsukumaran@gmailcom)
+" Last Change: 2019-12-08
 
 hi clear
-
 if exists("syntax_on")
   syntax reset
 endif
@@ -13,16 +13,13 @@ let colors_name = "apprentice"
 
 if ($TERM =~ '256' || &t_Co >= 256) || has("gui_running")
     hi Normal ctermbg=235 ctermfg=250 cterm=NONE guibg=#262626 guifg=#bcbcbc gui=NONE
-
-    set background=dark
-
     hi NonText ctermbg=NONE ctermfg=240 cterm=NONE guibg=NONE guifg=#585858 gui=NONE
     hi EndOfBuffer ctermbg=NONE ctermfg=240 cterm=NONE guibg=NONE guifg=#585858 gui=NONE
     hi LineNr ctermbg=234 ctermfg=242 cterm=NONE guibg=#1c1c1c guifg=#6c6c6c gui=NONE
     hi FoldColumn ctermbg=234 ctermfg=242 cterm=NONE guibg=#1c1c1c guifg=#6c6c6c gui=NONE
     hi Folded ctermbg=234 ctermfg=242 cterm=NONE guibg=#1c1c1c guifg=#6c6c6c gui=NONE
     hi MatchParen ctermbg=234 ctermfg=229 cterm=NONE guibg=#1c1c1c guifg=#ffffaf gui=NONE
-    hi signColumn ctermbg=234 ctermfg=242 cterm=NONE guibg=#1c1c1c guifg=#6c6c6c gui=NONE
+    hi SignColumn ctermbg=234 ctermfg=242 cterm=NONE guibg=#1c1c1c guifg=#6c6c6c gui=NONE
     hi Comment ctermbg=NONE ctermfg=240 cterm=NONE guibg=NONE guifg=#585858 gui=NONE
     hi Conceal ctermbg=NONE ctermfg=250 cterm=NONE guibg=NONE guifg=#bcbcbc gui=NONE
     hi Constant ctermbg=NONE ctermfg=208 cterm=NONE guibg=NONE guifg=#ff8700 gui=NONE
@@ -85,19 +82,16 @@ if ($TERM =~ '256' || &t_Co >= 256) || has("gui_running")
 elseif &t_Co == 8 || $TERM !~# '^linux' || &t_Co == 16
     set t_Co=16
 
-    hi Normal ctermbg=bg ctermfg=fg cterm=NONE
-
-    set background=dark
-
+    hi Normal ctermbg=black ctermfg=lightgrey cterm=NONE
     hi NonText ctermbg=NONE ctermfg=darkgrey cterm=NONE
     hi EndOfBuffer ctermbg=NONE ctermfg=darkgrey cterm=NONE
     hi LineNr ctermbg=black ctermfg=lightgrey cterm=NONE
     hi FoldColumn ctermbg=black ctermfg=lightgrey cterm=NONE
     hi Folded ctermbg=black ctermfg=lightgrey cterm=NONE
     hi MatchParen ctermbg=black ctermfg=yellow cterm=NONE
-    hi signColumn ctermbg=black ctermfg=lightgrey cterm=NONE
+    hi SignColumn ctermbg=black ctermfg=lightgrey cterm=NONE
     hi Comment ctermbg=NONE ctermfg=darkgrey cterm=NONE
-    hi Conceal ctermbg=NONE ctermfg=fg cterm=NONE
+    hi Conceal ctermbg=NONE ctermfg=lightgrey cterm=NONE
     hi Constant ctermbg=NONE ctermfg=red cterm=NONE
     hi Error ctermbg=NONE ctermfg=darkred cterm=reverse
     hi Identifier ctermbg=NONE ctermfg=darkblue cterm=NONE
@@ -109,43 +103,43 @@ elseif &t_Co == 8 || $TERM !~# '^linux' || &t_Co == 16
     hi Todo ctermbg=NONE ctermfg=NONE cterm=reverse
     hi Type ctermbg=NONE ctermfg=magenta cterm=NONE
     hi Underlined ctermbg=NONE ctermfg=darkcyan cterm=underline
-    hi Pmenu ctermbg=darkgrey ctermfg=fg cterm=NONE
+    hi Pmenu ctermbg=darkgrey ctermfg=lightgrey cterm=NONE
     hi PmenuSbar ctermbg=darkgrey ctermfg=NONE cterm=NONE
-    hi PmenuSel ctermbg=darkcyan ctermfg=bg cterm=NONE
+    hi PmenuSel ctermbg=darkcyan ctermfg=black cterm=NONE
     hi PmenuThumb ctermbg=darkcyan ctermfg=darkcyan cterm=NONE
-    hi ErrorMsg ctermbg=darkred ctermfg=bg cterm=NONE
-    hi ModeMsg ctermbg=green ctermfg=bg cterm=NONE
+    hi ErrorMsg ctermbg=darkred ctermfg=black cterm=NONE
+    hi ModeMsg ctermbg=green ctermfg=black cterm=NONE
     hi MoreMsg ctermbg=NONE ctermfg=darkcyan cterm=NONE
     hi Question ctermbg=NONE ctermfg=green cterm=NONE
     hi WarningMsg ctermbg=NONE ctermfg=darkred cterm=NONE
     hi TabLine ctermbg=darkgrey ctermfg=darkyellow cterm=NONE
     hi TabLineFill ctermbg=darkgrey ctermfg=darkgrey cterm=NONE
-    hi TabLineSel ctermbg=darkyellow ctermfg=bg cterm=NONE
+    hi TabLineSel ctermbg=darkyellow ctermfg=black cterm=NONE
     hi ToolbarLine ctermbg=black ctermfg=NONE cterm=NONE
-    hi ToolbarButton ctermbg=darkgrey ctermfg=fg cterm=NONE
+    hi ToolbarButton ctermbg=darkgrey ctermfg=lightgrey cterm=NONE
     hi Cursor ctermbg=lightgrey ctermfg=NONE cterm=NONE
     hi CursorColumn ctermbg=darkgrey ctermfg=NONE cterm=NONE
     hi CursorLineNr ctermbg=darkgrey ctermfg=cyan cterm=NONE
     hi CursorLine ctermbg=darkgrey ctermfg=NONE cterm=NONE
     hi helpLeadBlank ctermbg=NONE ctermfg=NONE cterm=NONE
     hi helpNormal ctermbg=NONE ctermfg=NONE cterm=NONE
-    hi StatusLine ctermbg=darkyellow ctermfg=bg cterm=NONE
+    hi StatusLine ctermbg=darkyellow ctermfg=black cterm=NONE
     hi StatusLineNC ctermbg=darkgrey ctermfg=darkyellow cterm=NONE
-    hi StatusLineTerm ctermbg=darkyellow ctermfg=bg cterm=NONE
+    hi StatusLineTerm ctermbg=darkyellow ctermfg=black cterm=NONE
     hi StatusLineTermNC ctermbg=darkgrey ctermfg=darkyellow cterm=NONE
-    hi Visual ctermbg=bg ctermfg=blue cterm=reverse
+    hi Visual ctermbg=black ctermfg=blue cterm=reverse
     hi VisualNOS ctermbg=NONE ctermfg=NONE cterm=underline
     hi VertSplit ctermbg=darkgrey ctermfg=darkgrey cterm=NONE
-    hi WildMenu ctermbg=blue ctermfg=bg cterm=NONE
+    hi WildMenu ctermbg=blue ctermfg=black cterm=NONE
     hi Function ctermbg=NONE ctermfg=yellow cterm=NONE
     hi SpecialKey ctermbg=NONE ctermfg=darkgrey cterm=NONE
     hi Title ctermbg=NONE ctermfg=white cterm=NONE
-    hi DiffAdd ctermbg=bg ctermfg=green cterm=reverse
-    hi DiffChange ctermbg=bg ctermfg=magenta cterm=reverse
-    hi DiffDelete ctermbg=bg ctermfg=darkred cterm=reverse
-    hi DiffText ctermbg=bg ctermfg=red cterm=reverse
-    hi IncSearch ctermbg=darkred ctermfg=bg cterm=NONE
-    hi Search ctermbg=yellow ctermfg=bg cterm=NONE
+    hi DiffAdd ctermbg=black ctermfg=green cterm=reverse
+    hi DiffChange ctermbg=black ctermfg=magenta cterm=reverse
+    hi DiffDelete ctermbg=black ctermfg=darkred cterm=reverse
+    hi DiffText ctermbg=black ctermfg=red cterm=reverse
+    hi IncSearch ctermbg=darkred ctermfg=black cterm=NONE
+    hi Search ctermbg=yellow ctermfg=black cterm=NONE
     hi Directory ctermbg=NONE ctermfg=cyan cterm=NONE
     hi debugPC ctermbg=darkblue ctermfg=NONE cterm=NONE
     hi debugBreakpoint ctermbg=darkred ctermfg=NONE cterm=NONE
@@ -204,6 +198,7 @@ hi link diffNoEOL WarningMsg
 hi link diffOnly WarningMsg
 hi link diffRemoved WarningMsg
 hi link diffAdded String
+hi link QuickFixLine Search
 
 let g:terminal_ansi_colors = [
         \ '#1c1c1c',

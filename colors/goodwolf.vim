@@ -397,6 +397,12 @@ call GoodWolfHL('diffLine', 'coal', 'orange', 'bold')
 call GoodWolfHL('diffSubname', 'orange', '', 'none')
 
 " }}}
+" Fish {{{
+
+call GoodWolfHL('fishOperator',        'fg',    'bg', 'none')
+call GoodWolfHL('fishDerefIdentifier', 'dress', 'bg', 'bold')
+
+" }}}
 " HTML {{{
 
 " Punctuation

@@ -208,7 +208,7 @@ call s:h('WildMenu', s:bg, s:purple, [s:attrs.bold])
 call s:h('CursorLine', s:none, s:subtle)
 
 hi! link ColorColumn  DraculaBgDark
-hi! link CursorColumn DraculaBgDark
+hi! link CursorColumn CursorLine
 hi! link CursorLineNr DraculaYellow
 hi! link DiffAdd      DraculaGreen
 hi! link DiffAdded    DiffAdd
@@ -245,7 +245,7 @@ hi! link WarningMsg   DraculaOrangeInverse
 
 " Required as some plugins will overwrite
 call s:h('MatchParen', s:green, s:none, [s:attrs.underline])
-call s:h('Conceal', s:comment, s:bglight)
+call s:h('Conceal', s:cyan, s:none)
 
 " Neovim uses SpecialKey for escape characters only. Vim uses it for that, plus whitespace.
 if has('nvim')

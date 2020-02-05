@@ -1,5 +1,5 @@
 " Vim color file
-" soft-charcoal
+" Thursday
 " Created by martin haesler with ThemeCreator (https://github.com/mswift42/themecreator)
 
 hi clear
@@ -9,28 +9,28 @@ syntax reset
 endif
 
 set t_Co=256
-let g:colors_name = "soft-charcoal"
+let g:colors_name = "Thursday"
 
 
 " Define reusable colorvariables.
-let s:bg="#191919"
-let s:fg="#c2c2c2"
-let s:fg2="#b2b2b2"
-let s:fg3="#a3a3a3"
-let s:fg4="#939393"
-let s:bg2="#2b2b2b"
-let s:bg3="#3e3e3e"
-let s:bg4="#505050"
-let s:keyword="#8aa234"
-let s:builtin="#54686d"
-let s:const= "#8aa6c1"
-let s:comment="#808080"
-let s:func="#7a8bbd"
-let s:str="#5d90cd"
-let s:type="#8aa6c1"
-let s:var="#8885b2"
-let s:warning="#ff6523"
-let s:warning2="#ff2370"
+let s:bg="#f9fbfd"
+let s:fg="#2f2f2f"
+let s:fg2="#404040"
+let s:fg3="#505050"
+let s:fg4="#616161"
+let s:bg2="#e5e7e9"
+let s:bg3="#d1d3d5"
+let s:bg4="#bdbfc0"
+let s:keyword="#28728f"
+let s:builtin="#636792"
+let s:const= "#28766e"
+let s:comment="#909090"
+let s:func="#935c54"
+let s:str="#8c5c79"
+let s:type="#56724b"
+let s:var="#7d6740"
+let s:warning="#fa0c0c"
+let s:warning2="#fa7b0c"
 
 exe 'hi Normal guifg='s:fg' guibg='s:bg 
 exe 'hi Cursor guifg='s:bg' guibg='s:fg 
@@ -54,9 +54,9 @@ exe 'hi Comment guifg='s:comment
 exe 'hi Conditional guifg='s:keyword  
 exe 'hi Constant guifg='s:const  
 exe 'hi Define guifg='s:keyword  
-exe 'hi DiffAdd guifg=#fafafa guibg=#123d0f gui=bold'
-exe 'hi DiffDelete guibg='s:bg2  
-exe 'hi DiffChange  guibg=#151b3c guifg=#fafafa'
+exe 'hi DiffAdd guifg=#000000 guibg=#bef6dc gui=bold'
+exe 'hi DiffDelete guifg='s:bg2  
+exe 'hi DiffChange  guibg=#5b76ef guifg=#ffffff'
 exe 'hi DiffText guifg=#ffffff guibg=#ff0000 gui=bold'
 exe 'hi ErrorMsg guifg='s:warning' guibg='s:bg2' gui=bold'
 exe 'hi WarningMsg guifg='s:fg' guibg='s:warning2 
