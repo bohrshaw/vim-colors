@@ -24,6 +24,7 @@ mswift42/vim-themes
 nanotech/jellybeans.vim
 nlknguyen/papercolor-theme
 sainnhe/edge
+sainnhe/gruvbox-material
 noahfrederick/vim-hemisu
 rakr/vim-one
 reedes/vim-colors-pencil
