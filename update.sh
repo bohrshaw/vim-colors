@@ -23,6 +23,7 @@ morhetz/gruvbox
 mswift42/vim-themes
 nanotech/jellybeans.vim
 nlknguyen/papercolor-theme
+sainnhe/edge
 noahfrederick/vim-hemisu
 rakr/vim-one
 reedes/vim-colors-pencil
