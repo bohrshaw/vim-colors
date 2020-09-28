@@ -221,7 +221,7 @@ hi! link ErrorMsg     DraculaRedInverse
 hi! link FoldColumn   DraculaSubtle
 hi! link Folded       DraculaBoundary
 hi! link IncSearch    DraculaOrangeInverse
-hi! link LineNr       DraculaComment
+call s:h('LineNr', s:comment)
 hi! link MoreMsg      DraculaFgBold
 hi! link NonText      DraculaSubtle
 hi! link Pmenu        DraculaBgDark
@@ -230,7 +230,7 @@ hi! link PmenuSel     DraculaSelection
 hi! link PmenuThumb   DraculaSelection
 hi! link Question     DraculaFgBold
 hi! link Search       DraculaSearch
-hi! link SignColumn   DraculaComment
+call s:h('SignColumn', s:comment)
 hi! link TabLine      DraculaBoundary
 hi! link TabLineFill  DraculaBgDarker
 hi! link TabLineSel   Normal
@@ -250,6 +250,15 @@ call s:h('Conceal', s:cyan, s:none)
 " Neovim uses SpecialKey for escape characters only. Vim uses it for that, plus whitespace.
 if has('nvim')
   hi! link SpecialKey DraculaRed
+  hi! link LspDiagnosticsUnderline DraculaFgUnderline
+  hi! link LspDiagnosticsInformation DraculaCyan
+  hi! link LspDiagnosticsHint DraculaCyan
+  hi! link LspDiagnosticsError DraculaError
+  hi! link LspDiagnosticsWarning DraculaOrange
+  hi! link LspDiagnosticsUnderlineError DraculaErrorLine
+  hi! link LspDiagnosticsUnderlineHint DraculaInfoLine
+  hi! link LspDiagnosticsUnderlineInformation DraculaInfoLine
+  hi! link LspDiagnosticsUnderlineWarning DraculaWarnLine
 else
   hi! link SpecialKey DraculaSubtle
 endif
@@ -305,4 +314,4 @@ hi! link helpBacktick Special
 
 "}}}
 
-" vim: fdm=marker ts=2 sts=2 sw=2 fdl=0:
+" vim: fdm=marker ts=2 sts=2 sw=2 fdl=0 et:
