@@ -7,9 +7,17 @@
 " -----------------------------------------------------------------------------
 
 " Initialization: {{{
-highlight clear
-if exists('syntax_on')
-  syntax reset
+let s:configuration = gruvbox_material#get_configuration()
+let s:palette = gruvbox_material#get_palette(s:configuration.background, s:configuration.palette)
+let s:path = expand('<sfile>:p') " the path of this script
+let s:last_modified = 'Sat May 22 02:21:58 AM UTC 2021'
+let g:gruvbox_material_loaded_file_types = []
+
+if !(exists('g:colors_name') && g:colors_name ==# 'gruvbox-material' && s:configuration.better_performance)
+  highlight clear
+  if exists('syntax_on')
+    syntax reset
+  endif
 endif
 
 let g:colors_name = 'gruvbox-material'
@@ -17,19 +25,17 @@ let g:colors_name = 'gruvbox-material'
 if !(has('termguicolors') && &termguicolors) && !has('gui_running') && &t_Co != 256
   finish
 endif
-
-let s:configuration = gruvbox_material#get_configuration()
-let s:palette = gruvbox_material#get_palette(s:configuration.background, s:configuration.palette)
-let s:path = expand('<sfile>:p') " the path of this script
-let s:last_modified = 'Mon 29 Jun 2020 10:07:19 AM UTC'
-let g:gruvbox_material_loaded_file_types = []
 " }}}
 " Common Highlight Groups: {{{
 " UI: {{{
 if s:configuration.transparent_background
   call gruvbox_material#highlight('Normal', s:palette.fg0, s:palette.none)
   call gruvbox_material#highlight('Terminal', s:palette.fg0, s:palette.none)
-  call gruvbox_material#highlight('EndOfBuffer', s:palette.bg0, s:palette.none)
+  if s:configuration.show_eob
+    call gruvbox_material#highlight('EndOfBuffer', s:palette.bg5, s:palette.none)
+  else
+    call gruvbox_material#highlight('EndOfBuffer', s:palette.bg0, s:palette.none)
+  endif
   call gruvbox_material#highlight('FoldColumn', s:palette.grey0, s:palette.none)
   call gruvbox_material#highlight('Folded', s:palette.grey1, s:palette.none)
   call gruvbox_material#highlight('SignColumn', s:palette.fg0, s:palette.none)
@@ -37,7 +43,11 @@ if s:configuration.transparent_background
 else
   call gruvbox_material#highlight('Normal', s:palette.fg0, s:palette.bg0)
   call gruvbox_material#highlight('Terminal', s:palette.fg0, s:palette.bg0)
-  call gruvbox_material#highlight('EndOfBuffer', s:palette.bg0, s:palette.bg0)
+  if s:configuration.show_eob
+    call gruvbox_material#highlight('EndOfBuffer', s:palette.bg5, s:palette.bg0)
+  else
+    call gruvbox_material#highlight('EndOfBuffer', s:palette.bg0, s:palette.bg0)
+  endif
   call gruvbox_material#highlight('Folded', s:palette.grey1, s:palette.bg2)
   call gruvbox_material#highlight('ToolbarLine', s:palette.fg1, s:palette.bg3)
   if s:configuration.sign_column_background ==# 'default'
@@ -61,10 +71,17 @@ highlight! link vCursor Cursor
 highlight! link iCursor Cursor
 highlight! link lCursor Cursor
 highlight! link CursorIM Cursor
-call gruvbox_material#highlight('CursorColumn', s:palette.none, s:palette.bg1)
-call gruvbox_material#highlight('CursorLine', s:palette.none, s:palette.bg1)
+if &diff
+  call gruvbox_material#highlight('CursorLine', s:palette.none, s:palette.none, 'underline')
+  call gruvbox_material#highlight('CursorColumn', s:palette.none, s:palette.none, 'bold')
+else
+  call gruvbox_material#highlight('CursorLine', s:palette.none, s:palette.bg1)
+  call gruvbox_material#highlight('CursorColumn', s:palette.none, s:palette.bg1)
+endif
 call gruvbox_material#highlight('LineNr', s:palette.grey0, s:palette.none)
-if (&relativenumber == 1 && &cursorline == 0) || s:configuration.sign_column_background !=# 'default'
+if &diff
+  call gruvbox_material#highlight('CursorLineNr', s:palette.grey2, s:palette.none, 'underline')
+elseif (&relativenumber == 1 && &cursorline == 0) || s:configuration.sign_column_background !=# 'default'
   call gruvbox_material#highlight('CursorLineNr', s:palette.grey2, s:palette.none)
 else
   call gruvbox_material#highlight('CursorLineNr', s:palette.grey2, s:palette.bg1)
@@ -72,7 +89,7 @@ endif
 call gruvbox_material#highlight('DiffAdd', s:palette.none, s:palette.bg_diff_green)
 call gruvbox_material#highlight('DiffChange', s:palette.none, s:palette.bg_diff_blue)
 call gruvbox_material#highlight('DiffDelete', s:palette.none, s:palette.bg_diff_red)
-call gruvbox_material#highlight('DiffText', s:palette.bg0, s:palette.fg0)
+call gruvbox_material#highlight('DiffText', s:palette.bg0, s:palette.blue)
 call gruvbox_material#highlight('Directory', s:palette.green, s:palette.none)
 call gruvbox_material#highlight('ErrorMsg', s:palette.red, s:palette.none, 'bold,underline')
 call gruvbox_material#highlight('WarningMsg', s:palette.yellow, s:palette.none, 'bold')
@@ -95,26 +112,35 @@ else
 end
 highlight! link WildMenu PmenuSel
 call gruvbox_material#highlight('PmenuThumb', s:palette.none, s:palette.grey0)
+call gruvbox_material#highlight('NormalFloat', s:palette.fg1, s:palette.bg3)
 call gruvbox_material#highlight('Question', s:palette.yellow, s:palette.none)
 call gruvbox_material#highlight('SpellBad', s:palette.red, s:palette.none, 'undercurl', s:palette.red)
 call gruvbox_material#highlight('SpellCap', s:palette.blue, s:palette.none, 'undercurl', s:palette.blue)
 call gruvbox_material#highlight('SpellLocal', s:palette.aqua, s:palette.none, 'undercurl', s:palette.aqua)
 call gruvbox_material#highlight('SpellRare', s:palette.purple, s:palette.none, 'undercurl', s:palette.purple)
 if s:configuration.statusline_style ==# 'original'
-  call gruvbox_material#highlight('StatusLine', s:palette.grey2, s:palette.bg_statusline3)
-  call gruvbox_material#highlight('StatusLineTerm', s:palette.grey2, s:palette.bg_statusline3)
-  call gruvbox_material#highlight('StatusLineNC', s:palette.grey1, s:palette.bg_statusline2)
-  call gruvbox_material#highlight('StatusLineTermNC', s:palette.grey1, s:palette.bg_statusline2)
+  call gruvbox_material#highlight('StatusLine', s:palette.grey2, s:palette.bg_statusline2)
+  call gruvbox_material#highlight('StatusLineTerm', s:palette.grey2, s:palette.bg_statusline2)
+  call gruvbox_material#highlight('StatusLineNC', s:palette.grey1, s:palette.bg_statusline1)
+  call gruvbox_material#highlight('StatusLineTermNC', s:palette.grey1, s:palette.bg_statusline1)
+  call gruvbox_material#highlight('TabLine', s:palette.grey2, s:palette.bg_statusline2)
+  call gruvbox_material#highlight('TabLineFill', s:palette.grey2, s:palette.bg0)
+  call gruvbox_material#highlight('TabLineSel', s:palette.bg0, s:palette.grey2)
+elseif s:configuration.statusline_style ==# 'mix'
+  call gruvbox_material#highlight('StatusLine', s:palette.grey2, s:palette.bg_statusline2)
+  call gruvbox_material#highlight('StatusLineTerm', s:palette.grey2, s:palette.bg_statusline2)
+  call gruvbox_material#highlight('StatusLineNC', s:palette.grey1, s:palette.bg_statusline1)
+  call gruvbox_material#highlight('StatusLineTermNC', s:palette.grey1, s:palette.bg_statusline1)
   call gruvbox_material#highlight('TabLine', s:palette.grey2, s:palette.bg_statusline3)
-  call gruvbox_material#highlight('TabLineFill', s:palette.grey1, s:palette.bg0)
+  call gruvbox_material#highlight('TabLineFill', s:palette.grey2, s:palette.bg_statusline2)
   call gruvbox_material#highlight('TabLineSel', s:palette.bg0, s:palette.grey2)
 else
-  call gruvbox_material#highlight('StatusLine', s:palette.fg1, s:palette.bg_statusline2)
-  call gruvbox_material#highlight('StatusLineTerm', s:palette.fg1, s:palette.bg_statusline2)
-  call gruvbox_material#highlight('StatusLineNC', s:palette.grey2, s:palette.bg_statusline2)
-  call gruvbox_material#highlight('StatusLineTermNC', s:palette.grey2, s:palette.bg_statusline2)
+  call gruvbox_material#highlight('StatusLine', s:palette.fg1, s:palette.bg_statusline1)
+  call gruvbox_material#highlight('StatusLineTerm', s:palette.fg1, s:palette.bg_statusline1)
+  call gruvbox_material#highlight('StatusLineNC', s:palette.grey1, s:palette.bg_statusline1)
+  call gruvbox_material#highlight('StatusLineTermNC', s:palette.grey1, s:palette.bg_statusline1)
   call gruvbox_material#highlight('TabLine', s:palette.fg1, s:palette.bg_statusline3)
-  call gruvbox_material#highlight('TabLineFill', s:palette.fg0, s:palette.bg_statusline1)
+  call gruvbox_material#highlight('TabLineFill', s:palette.fg1, s:palette.bg_statusline1)
   call gruvbox_material#highlight('TabLineSel', s:palette.bg0, s:palette.grey2)
 endif
 call gruvbox_material#highlight('VertSplit', s:palette.bg5, s:palette.none)
@@ -141,17 +167,33 @@ call gruvbox_material#highlight('debugBreakpoint', s:palette.bg0, s:palette.red)
 call gruvbox_material#highlight('ToolbarButton', s:palette.bg0, s:palette.grey2)
 if has('nvim')
   call gruvbox_material#highlight('Substitute', s:palette.bg0, s:palette.yellow)
+  highlight! link LspDiagnosticsFloatingError ErrorFloat
+  highlight! link LspDiagnosticsFloatingWarning WarningFloat
+  highlight! link LspDiagnosticsFloatingInformation InfoFloat
+  highlight! link LspDiagnosticsFloatingHint HintFloat
+  highlight! link LspDiagnosticsDefaultError ErrorText
+  highlight! link LspDiagnosticsDefaultWarning WarningText
+  highlight! link LspDiagnosticsDefaultInformation InfoText
+  highlight! link LspDiagnosticsDefaultHint HintText
+  highlight! link LspDiagnosticsVirtualTextError VirtualTextError
+  highlight! link LspDiagnosticsVirtualTextWarning VirtualTextWarning
+  highlight! link LspDiagnosticsVirtualTextInformation VirtualTextInfo
+  highlight! link LspDiagnosticsVirtualTextHint VirtualTextHint
+  highlight! link LspDiagnosticsUnderlineError ErrorText
+  highlight! link LspDiagnosticsUnderlineWarning WarningText
+  highlight! link LspDiagnosticsUnderlineInformation InfoText
+  highlight! link LspDiagnosticsUnderlineHint HintText
+  highlight! link LspDiagnosticsSignError RedSign
+  highlight! link LspDiagnosticsSignWarning YellowSign
+  highlight! link LspDiagnosticsSignInformation BlueSign
+  highlight! link LspDiagnosticsSignHint AquaSign
+  highlight! link LspReferenceText CurrentWord
+  highlight! link LspReferenceRead CurrentWord
+  highlight! link LspReferenceWrite CurrentWord
   highlight! link TermCursor Cursor
   highlight! link healthError Red
   highlight! link healthSuccess Green
   highlight! link healthWarning Yellow
-  highlight! link LspDiagnosticsError Grey
-  highlight! link LspDiagnosticsWarning Grey
-  highlight! link LspDiagnosticsInformation Grey
-  highlight! link LspDiagnosticsHint Grey
-  highlight! link LspReferenceText CurrentWord
-  highlight! link LspReferenceRead CurrentWord
-  highlight! link LspReferenceWrite CurrentWord
 endif
 " }}}
 " Syntax: {{{
@@ -275,6 +317,17 @@ else
   call gruvbox_material#highlight('BlueSign', s:palette.blue, s:palette.bg2)
   call gruvbox_material#highlight('PurpleSign', s:palette.purple, s:palette.bg2)
 endif
+if s:configuration.diagnostic_text_highlight
+  call gruvbox_material#highlight('ErrorText', s:palette.none, s:palette.bg_visual_red, 'undercurl', s:palette.red)
+  call gruvbox_material#highlight('WarningText', s:palette.none, s:palette.bg_visual_yellow, 'undercurl', s:palette.yellow)
+  call gruvbox_material#highlight('InfoText', s:palette.none, s:palette.bg_visual_blue, 'undercurl', s:palette.blue)
+  call gruvbox_material#highlight('HintText', s:palette.none, s:palette.bg_visual_green, 'undercurl', s:palette.green)
+else
+  call gruvbox_material#highlight('ErrorText', s:palette.none, s:palette.none, 'undercurl', s:palette.red)
+  call gruvbox_material#highlight('WarningText', s:palette.none, s:palette.none, 'undercurl', s:palette.yellow)
+  call gruvbox_material#highlight('InfoText', s:palette.none, s:palette.none, 'undercurl', s:palette.blue)
+  call gruvbox_material#highlight('HintText', s:palette.none, s:palette.none, 'undercurl', s:palette.green)
+endif
 if s:configuration.diagnostic_line_highlight
   call gruvbox_material#highlight('ErrorLine', s:palette.none, s:palette.bg_visual_red)
   call gruvbox_material#highlight('WarningLine', s:palette.none, s:palette.bg_visual_yellow)
@@ -286,7 +339,24 @@ else
   highlight clear InfoLine
   highlight clear HintLine
 endif
-if s:configuration.current_word ==# 'grey background'
+if s:configuration.diagnostic_virtual_text ==# 'grey'
+  highlight! link VirtualTextWarning Grey
+  highlight! link VirtualTextError Grey
+  highlight! link VirtualTextInfo Grey
+  highlight! link VirtualTextHint Grey
+else
+  highlight! link VirtualTextWarning Yellow
+  highlight! link VirtualTextError Red
+  highlight! link VirtualTextInfo Blue
+  highlight! link VirtualTextHint Green
+endif
+call gruvbox_material#highlight('ErrorFloat', s:palette.red, s:palette.bg3)
+call gruvbox_material#highlight('WarningFloat', s:palette.yellow, s:palette.bg3)
+call gruvbox_material#highlight('InfoFloat', s:palette.blue, s:palette.bg3)
+call gruvbox_material#highlight('HintFloat', s:palette.green, s:palette.bg3)
+if &diff
+  call gruvbox_material#highlight('CurrentWord', s:palette.bg0, s:palette.bg_green)
+elseif s:configuration.current_word ==# 'grey background'
   call gruvbox_material#highlight('CurrentWord', s:palette.none, s:palette.bg_current_word)
 else
   call gruvbox_material#highlight('CurrentWord', s:palette.none, s:palette.none, s:configuration.current_word)
@@ -297,20 +367,22 @@ endif
 if (has('termguicolors') && &termguicolors) || has('gui_running')
   " Definition
   let s:terminal = {
-        \ 'black':    &background ==# 'dark' ? s:palette.bg0 : s:palette.fg0,
-        \ 'red':      s:palette.red,
-        \ 'yellow':   s:palette.yellow,
-        \ 'green':    s:palette.green,
-        \ 'cyan':     s:palette.aqua,
-        \ 'blue':     s:palette.blue,
-        \ 'purple':   s:palette.purple,
-        \ 'white':    &background ==# 'dark' ? s:palette.fg0 : s:palette.bg0
+        \ 'black':         &background ==# 'dark' ? s:palette.bg0 : s:palette.fg0,
+        \ 'bright_black':  &background ==# 'dark' ? s:palette.bg5 : s:palette.fg1,
+        \ 'red':           s:palette.red,
+        \ 'yellow':        s:palette.yellow,
+        \ 'green':         s:palette.green,
+        \ 'cyan':          s:palette.aqua,
+        \ 'blue':          s:palette.blue,
+        \ 'purple':        s:palette.purple,
+        \ 'white':         &background ==# 'dark' ? s:palette.fg0 : s:palette.bg0,
+        \ 'bright_white':  &background ==# 'dark' ? s:palette.fg1 : s:palette.bg5,
         \ }
   " Implementation: {{{
   if !has('nvim')
     let g:terminal_ansi_colors = [s:terminal.black[0], s:terminal.red[0], s:terminal.green[0], s:terminal.yellow[0],
-          \ s:terminal.blue[0], s:terminal.purple[0], s:terminal.cyan[0], s:terminal.white[0], s:terminal.black[0], s:terminal.red[0],
-          \ s:terminal.green[0], s:terminal.yellow[0], s:terminal.blue[0], s:terminal.purple[0], s:terminal.cyan[0], s:terminal.white[0]]
+          \ s:terminal.blue[0], s:terminal.purple[0], s:terminal.cyan[0], s:terminal.white[0], s:terminal.bright_black[0], s:terminal.red[0],
+          \ s:terminal.green[0], s:terminal.yellow[0], s:terminal.blue[0], s:terminal.purple[0], s:terminal.cyan[0], s:terminal.bright_white[0]]
   else
     let g:terminal_color_0 = s:terminal.black[0]
     let g:terminal_color_1 = s:terminal.red[0]
@@ -320,76 +392,102 @@ if (has('termguicolors') && &termguicolors) || has('gui_running')
     let g:terminal_color_5 = s:terminal.purple[0]
     let g:terminal_color_6 = s:terminal.cyan[0]
     let g:terminal_color_7 = s:terminal.white[0]
-    let g:terminal_color_8 = s:terminal.black[0]
+    let g:terminal_color_8 = s:terminal.bright_black[0]
     let g:terminal_color_9 = s:terminal.red[0]
     let g:terminal_color_10 = s:terminal.green[0]
     let g:terminal_color_11 = s:terminal.yellow[0]
     let g:terminal_color_12 = s:terminal.blue[0]
     let g:terminal_color_13 = s:terminal.purple[0]
     let g:terminal_color_14 = s:terminal.cyan[0]
-    let g:terminal_color_15 = s:terminal.white[0]
+    let g:terminal_color_15 = s:terminal.bright_white[0]
   endif
   " }}}
 endif
 " }}}
 " Plugins: {{{
 " nvim-treesitter/nvim-treesitter {{{
-highlight! link TSPunctDelimiter Grey
-highlight! link TSPunctBracket Fg
-highlight! link TSPunctSpecial Fg
-highlight! link TSConstant PurpleItalic
-highlight! link TSConstBuiltin PurpleItalic
-highlight! link TSConstMacro Purple
-highlight! link TSString Yellow
-highlight! link TSStringRegex Green
-highlight! link TSStringEscape Green
-highlight! link TSCharacter Yellow
-highlight! link TSNumber Purple
+call gruvbox_material#highlight('TSStrong', s:palette.none, s:palette.none, 'bold')
+call gruvbox_material#highlight('TSEmphasis', s:palette.none, s:palette.none, 'bold')
+call gruvbox_material#highlight('TSUnderline', s:palette.none, s:palette.none, 'underline')
+call gruvbox_material#highlight('TSNote', s:palette.bg0, s:palette.blue, 'bold')
+call gruvbox_material#highlight('TSWarning', s:palette.bg0, s:palette.yellow, 'bold')
+call gruvbox_material#highlight('TSDanger', s:palette.bg0, s:palette.red, 'bold')
+highlight! link TSAnnotation Purple
+highlight! link TSAttribute Purple
 highlight! link TSBoolean Purple
-highlight! link TSFloat Purple
-highlight! link TSFunction Green
-highlight! link TSFuncBuiltin Green
-highlight! link TSFuncMacro Green
-highlight! link TSParameter Fg
-highlight! link TSMethod Green
-highlight! link TSField Green
-highlight! link TSProperty Green
-highlight! link TSConstructor Fg
+highlight! link TSCharacter Aqua
+highlight! link TSComment Comment
 highlight! link TSConditional Red
-highlight! link TSRepeat Red
-highlight! link TSLabel Orange
-highlight! link TSOperator Orange
-highlight! link TSKeyword Red
+highlight! link TSConstBuiltin BlueItalic
+highlight! link TSConstMacro BlueItalic
+highlight! link TSConstant Fg
+highlight! link TSConstructor Fg
+highlight! link TSError ErrorText
 highlight! link TSException Red
-highlight! link TSType Aqua
-highlight! link TSTypeBuiltin BlueItalic
+highlight! link TSField Green
+highlight! link TSFloat Purple
+highlight! link TSFuncBuiltin GreenBold
+highlight! link TSFuncMacro GreenBold
+highlight! link TSFunction GreenBold
+highlight! link TSInclude Red
+highlight! link TSKeyword Red
+highlight! link TSKeywordFunction Red
+highlight! link TSKeywordOperator Orange
+highlight! link TSLabel Orange
+highlight! link TSMethod GreenBold
+highlight! link TSNamespace YellowItalic
+highlight! link TSNone Fg
+highlight! link TSNumber Purple
+highlight! link TSOperator Orange
+highlight! link TSParameter Fg
+highlight! link TSParameterReference Fg
+highlight! link TSProperty Green
+highlight! link TSPunctBracket Fg
+highlight! link TSPunctDelimiter Grey
+highlight! link TSPunctSpecial Blue
+highlight! link TSRepeat Red
+highlight! link TSString Aqua
+highlight! link TSStringEscape Green
+highlight! link TSStringRegex Green
 highlight! link TSStructure Orange
-highlight! link TSInclude PurpleItalic
+highlight! link TSSymbol Fg
+highlight! link TSTag Orange
+highlight! link TSTagDelimiter Green
+highlight! link TSText Green
+highlight! link TSStrike Grey
+highlight! link TSMath Blue
+highlight! link TSType Yellow
+highlight! link TSTypeBuiltin YellowItalic
+highlight! link TSURI markdownUrl
+highlight! link TSVariable Fg
+highlight! link TSVariableBuiltin BlueItalic
 " }}}
 " neoclide/coc.nvim {{{
 call gruvbox_material#highlight('CocHoverRange', s:palette.none, s:palette.none, 'bold,underline')
-call gruvbox_material#highlight('CocErrorHighlight', s:palette.none, s:palette.none, 'undercurl', s:palette.red)
-call gruvbox_material#highlight('CocWarningHighlight', s:palette.none, s:palette.none, 'undercurl', s:palette.yellow)
-call gruvbox_material#highlight('CocInfoHighlight', s:palette.none, s:palette.none, 'undercurl', s:palette.blue)
-call gruvbox_material#highlight('CocHintHighlight', s:palette.none, s:palette.none, 'undercurl', s:palette.aqua)
-call gruvbox_material#highlight('CocErrorFloat', s:palette.red, s:palette.bg3)
-call gruvbox_material#highlight('CocWarningFloat', s:palette.yellow, s:palette.bg3)
-call gruvbox_material#highlight('CocInfoFloat', s:palette.blue, s:palette.bg3)
-call gruvbox_material#highlight('CocHintFloat', s:palette.aqua, s:palette.bg3)
+highlight! link CocErrorFloat ErrorFloat
+highlight! link CocWarningFloat WarningFloat
+highlight! link CocInfoFloat InfoFloat
+highlight! link CocHintFloat HintFloat
+highlight! link CocErrorHighlight ErrorText
+highlight! link CocWarningHighlight WarningText
+highlight! link CocInfoHighlight InfoText
+highlight! link CocHintHighlight HintText
 highlight! link CocHighlightText CurrentWord
 highlight! link CocErrorSign RedSign
 highlight! link CocWarningSign YellowSign
 highlight! link CocInfoSign BlueSign
 highlight! link CocHintSign AquaSign
-highlight! link CocWarningVirtualText Grey
-highlight! link CocErrorVirtualText Grey
-highlight! link CocInfoVirtualText Grey
-highlight! link CocHintVirtualText Grey
+highlight! link CocWarningVirtualText VirtualTextWarning
+highlight! link CocErrorVirtualText VirtualTextError
+highlight! link CocInfoVirtualText VirtualTextInfo
+highlight! link CocHintVirtualText VirtualTextHint
 highlight! link CocErrorLine ErrorLine
 highlight! link CocWarningLine WarningLine
 highlight! link CocInfoLine InfoLine
 highlight! link CocHintLine HintLine
 highlight! link CocCodeLens Grey
+highlight! link CocFadeOut Grey
+highlight! link CocStrikeThrough Grey
 highlight! link HighlightedyankRegion Visual
 highlight! link CocGitAddedSign GreenSign
 highlight! link CocGitChangeRemovedSign PurpleSign
@@ -399,29 +497,48 @@ highlight! link CocGitTopRemovedSign RedSign
 highlight! link CocExplorerBufferRoot Orange
 highlight! link CocExplorerBufferExpandIcon Aqua
 highlight! link CocExplorerBufferBufnr Purple
-highlight! link CocExplorerBufferModified Red
+highlight! link CocExplorerBufferModified Yellow
+highlight! link CocExplorerBufferReadonly Red
 highlight! link CocExplorerBufferBufname Grey
 highlight! link CocExplorerBufferFullpath Grey
 highlight! link CocExplorerFileRoot Orange
+highlight! link CocExplorerFileRootName Green
 highlight! link CocExplorerFileExpandIcon Aqua
 highlight! link CocExplorerFileFullpath Grey
 highlight! link CocExplorerFileDirectory Green
-highlight! link CocExplorerFileGitStage Purple
-highlight! link CocExplorerFileGitUnstage Yellow
+highlight! link CocExplorerFileGitStaged Purple
+highlight! link CocExplorerFileGitUnstaged Yellow
+highlight! link CocExplorerFileGitRootStaged Purple
+highlight! link CocExplorerFileGitRootUnstaged Yellow
+highlight! link CocExplorerGitPathChange Fg
+highlight! link CocExplorerGitContentChange Fg
+highlight! link CocExplorerGitRenamed Purple
+highlight! link CocExplorerGitCopied Fg
+highlight! link CocExplorerGitAdded Green
+highlight! link CocExplorerGitUntracked Blue
+highlight! link CocExplorerGitUnmodified Fg
+highlight! link CocExplorerGitUnmerged Orange
+highlight! link CocExplorerGitMixed Aqua
+highlight! link CocExplorerGitModified Yellow
+highlight! link CocExplorerGitDeleted Red
+highlight! link CocExplorerGitIgnored Grey
 highlight! link CocExplorerFileSize Blue
 highlight! link CocExplorerTimeAccessed Aqua
 highlight! link CocExplorerTimeCreated Aqua
 highlight! link CocExplorerTimeModified Aqua
+highlight! link CocExplorerIndentLine Conceal
+highlight! link CocExplorerHelpDescription Grey
+highlight! link CocExplorerHelpHint Grey
 " }}}
 " prabirshrestha/vim-lsp {{{
-highlight! link LspErrorVirtual Grey
-highlight! link LspWarningVirtual Grey
-highlight! link LspInformationVirtual Grey
-highlight! link LspHintVirtual Grey
-highlight! link LspErrorHighlight CocErrorHighlight
-highlight! link LspWarningHighlight CocWarningHighlight
-highlight! link LspInformationHighlight CocInfoHighlight
-highlight! link LspHintHighlight CocHintHighlight
+highlight! link LspErrorVirtual VirtualTextError
+highlight! link LspWarningVirtual VirtualTextWarning
+highlight! link LspInformationVirtual VirtualTextInfo
+highlight! link LspHintVirtual VirtualTextHint
+highlight! link LspErrorHighlight ErrorText
+highlight! link LspWarningHighlight WarningText
+highlight! link LspInformationHighlight InfoText
+highlight! link LspHintHighlight HintText
 highlight! link lspReference CurrentWord
 " }}}
 " ycm-core/YouCompleteMe {{{
@@ -429,42 +546,42 @@ highlight! link YcmErrorSign RedSign
 highlight! link YcmWarningSign YellowSign
 highlight! link YcmErrorLine ErrorLine
 highlight! link YcmWarningLine WarningLine
-highlight! link YcmErrorSection CocErrorHighlight
-highlight! link YcmWarningSection CocWarningHighlight
+highlight! link YcmErrorSection ErrorText
+highlight! link YcmWarningSection WarningText
 " }}}
 " dense-analysis/ale {{{
-highlight! link ALEError CocErrorHighlight
-highlight! link ALEWarning CocWarningHighlight
-highlight! link ALEInfo CocInfoHighlight
+highlight! link ALEError ErrorText
+highlight! link ALEWarning WarningText
+highlight! link ALEInfo InfoText
 highlight! link ALEErrorSign RedSign
 highlight! link ALEWarningSign YellowSign
 highlight! link ALEInfoSign BlueSign
 highlight! link ALEErrorLine ErrorLine
 highlight! link ALEWarningLine WarningLine
 highlight! link ALEInfoLine InfoLine
-highlight! link ALEVirtualTextError Grey
-highlight! link ALEVirtualTextWarning Grey
-highlight! link ALEVirtualTextInfo Grey
-highlight! link ALEVirtualTextStyleError Grey
-highlight! link ALEVirtualTextStyleWarning Grey
+highlight! link ALEVirtualTextError VirtualTextError
+highlight! link ALEVirtualTextWarning VirtualTextWarning
+highlight! link ALEVirtualTextInfo VirtualTextInfo
+highlight! link ALEVirtualTextStyleError VirtualTextHint
+highlight! link ALEVirtualTextStyleWarning VirtualTextHint
 " }}}
 " neomake/neomake {{{
-highlight! link NeomakeError ALEError
+highlight! link NeomakeError ErrorText
+highlight! link NeomakeWarning WarningText
+highlight! link NeomakeInfo InfoText
+highlight! link NeomakeMessage HintText
 highlight! link NeomakeErrorSign RedSign
-highlight! link NeomakeWarning ALEWarning
 highlight! link NeomakeWarningSign YellowSign
-highlight! link NeomakeInfo ALEInfo
 highlight! link NeomakeInfoSign BlueSign
-highlight! link NeomakeMessage Aqua
 highlight! link NeomakeMessageSign AquaSign
-highlight! link NeomakeVirtualtextError Grey
-highlight! link NeomakeVirtualtextWarning Grey
-highlight! link NeomakeVirtualtextInfo Grey
-highlight! link NeomakeVirtualtextMessag Grey
+highlight! link NeomakeVirtualtextError VirtualTextError
+highlight! link NeomakeVirtualtextWarning VirtualTextWarning
+highlight! link NeomakeVirtualtextInfo VirtualTextInfo
+highlight! link NeomakeVirtualtextMessag VirtualTextHint
 " }}}
 " vim-syntastic/syntastic {{{
-highlight! link SyntasticError ALEError
-highlight! link SyntasticWarning ALEWarning
+highlight! link SyntasticError ErrorText
+highlight! link SyntasticWarning WarningText
 highlight! link SyntasticErrorSign RedSign
 highlight! link SyntasticWarningSign YellowSign
 highlight! link SyntasticErrorLine ErrorLine
@@ -484,10 +601,58 @@ call gruvbox_material#highlight('Lf_hl_match2', s:palette.blue, s:palette.none, 
 call gruvbox_material#highlight('Lf_hl_match3', s:palette.purple, s:palette.none, 'bold')
 call gruvbox_material#highlight('Lf_hl_match4', s:palette.orange, s:palette.none, 'bold')
 call gruvbox_material#highlight('Lf_hl_matchRefine', s:palette.red, s:palette.none, 'bold')
-highlight! link Lf_hl_cursorline Fg
+call gruvbox_material#highlight('Lf_hl_popup_normalMode', s:palette.bg0, s:palette.grey2, 'bold')
+call gruvbox_material#highlight('Lf_hl_popup_inputMode', s:palette.bg0, s:palette.grey2, 'bold')
+call gruvbox_material#highlight('Lf_hl_popup_category', s:palette.bg0, s:palette.grey1)
+call gruvbox_material#highlight('Lf_hl_popup_nameOnlyMode', s:palette.fg1, s:palette.bg_statusline3)
+call gruvbox_material#highlight('Lf_hl_popup_fullPathMode', s:palette.fg1, s:palette.bg_statusline3)
+call gruvbox_material#highlight('Lf_hl_popup_fuzzyMode', s:palette.bg0, s:palette.grey0)
+call gruvbox_material#highlight('Lf_hl_popup_regexMode', s:palette.fg1, s:palette.bg_statusline3)
+call gruvbox_material#highlight('Lf_hl_popup_lineInfo', s:palette.bg0, s:palette.green)
+call gruvbox_material#highlight('Lf_hl_popup_total', s:palette.bg0, s:palette.yellow)
+call gruvbox_material#highlight('Lf_hl_popup_cursor', s:palette.bg0, s:palette.green)
+call gruvbox_material#highlight('Lf_hl_popup_inputText', s:palette.green, s:palette.bg3)
+call gruvbox_material#highlight('Lf_hl_cursorline', s:palette.fg1, s:palette.none)
 highlight! link Lf_hl_selection DiffAdd
 highlight! link Lf_hl_rgHighlight Visual
 highlight! link Lf_hl_gtagsHighlight Visual
+highlight! link Lf_hl_popup_window Pmenu
+highlight! link Lf_hl_popup_prompt Orange
+highlight! link Lf_hl_popup_cwd Pmenu
+highlight! link Lf_hl_popup_blank Lf_hl_popup_window
+highlight! link Lf_hl_popup_spin Purple
+" }}}
+" liuchengxu/vim-clap {{{
+call gruvbox_material#highlight('ClapSelected', s:palette.red, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapCurrentSelection', s:palette.orange, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapBlines', s:palette.fg1, s:palette.bg3)
+call gruvbox_material#highlight('ClapProviderId', s:palette.fg1, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapMatches1', s:palette.red, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapMatches2', s:palette.orange, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapMatches3', s:palette.yellow, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapMatches4', s:palette.aqua, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapMatches5', s:palette.blue, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapMatches6', s:palette.purple, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapFuzzyMatches', s:palette.green, s:palette.bg3, 'bold')
+call gruvbox_material#highlight('ClapNoMatchesFound', s:palette.red, s:palette.bg3, 'bold')
+highlight! link ClapInput Pmenu
+highlight! link ClapDisplay Pmenu
+highlight! link ClapPreview Pmenu
+highlight! link ClapFuzzyMatches1 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches2 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches3 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches4 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches5 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches6 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches7 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches8 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches9 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches10 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches11 ClapFuzzyMatches
+highlight! link ClapFuzzyMatches12 ClapFuzzyMatches
+highlight! link ClapBlinesLineNr Grey
+highlight! link ClapProviderColon ClapBlines
+highlight! link ClapProviderAbout ClapBlines
 " }}}
 " junegunn/fzf.vim {{{
 let g:fzf_colors = {
@@ -498,12 +663,19 @@ let g:fzf_colors = {
       \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
       \ 'hl+':     ['fg', 'Aqua'],
       \ 'info':    ['fg', 'Aqua'],
+      \ 'border':  ['fg', 'Grey'],
       \ 'prompt':  ['fg', 'Orange'],
       \ 'pointer': ['fg', 'Blue'],
       \ 'marker':  ['fg', 'Yellow'],
       \ 'spinner': ['fg', 'Yellow'],
       \ 'header':  ['fg', 'Grey']
       \ }
+" }}}
+" nvim-telescope/telescope.nvim {{{
+call gruvbox_material#highlight('TelescopeMatching', s:palette.green, s:palette.none, 'bold')
+highlight! link TelescopeBorder Grey
+highlight! link TelescopePromptPrefix Orange
+highlight! link TelescopeSelection DiffAdd
 " }}}
 " Shougo/denite.nvim {{{
 call gruvbox_material#highlight('deniteMatchedChar', s:palette.green, s:palette.none, 'bold')
@@ -534,6 +706,12 @@ highlight! link SignifySignAdd GreenSign
 highlight! link SignifySignChange BlueSign
 highlight! link SignifySignDelete RedSign
 highlight! link SignifySignChangeDelete PurpleSign
+" }}}
+" lewis6991/gitsigns.nvim {{{
+highlight! link GitSignsAdd GreenSign
+highlight! link GitSignsChange BlueSign
+highlight! link GitSignsDelete RedSign
+highlight! link GitSignsChangeDelete PurpleSign
 " }}}
 " andymass/vim-matchup {{{
 call gruvbox_material#highlight('MatchParenCur', s:palette.none, s:palette.none, 'bold')
@@ -641,22 +819,20 @@ highlight! link agitDiffRemove Red
 highlight! link agitDiffAdd Green
 highlight! link agitDiffHeader Purple
 " }}}
-" netrw {{{
-" https://www.vim.org/scripts/script.php?script_id=1075
-highlight! link netrwDir Green
-highlight! link netrwClassify Green
-highlight! link netrwLink Grey
-highlight! link netrwSymLink Fg
-highlight! link netrwExe Yellow
-highlight! link netrwComment Grey
-highlight! link netrwList Aqua
-highlight! link netrwHelpCmd Blue
-highlight! link netrwCmdSep Grey
-highlight! link netrwVersion Orange
-" }}}
 " }}}
 " Extended File Types: {{{
-" Note: To ensure that the `s:last_modified` variable is always up to date, you need to copy `.githooks/pre-commit` to `.git/hooks/pre-commit`.
+" Whitelist: {{{ File type optimizations that will always be loaded.
+" diff {{{
+highlight! link diffAdded Green
+highlight! link diffRemoved Red
+highlight! link diffChanged Blue
+highlight! link diffOldFile Yellow
+highlight! link diffNewFile Orange
+highlight! link diffFile Aqua
+highlight! link diffLine Grey
+highlight! link diffIndexLine Purple
+" }}}
+" }}}
 " Generate the `after/ftplugin` directory based on the comment tags in this file.
 " For example, the content between `ft_begin: sh/zsh` and `ft_end` will be placed in `after/ftplugin/sh/gruvbox_material.vim` and `after/ftplugin/zsh/gruvbox_material.vim`.
 if gruvbox_material#ft_exists(s:path) " If the ftplugin exists.
@@ -666,7 +842,7 @@ if gruvbox_material#ft_exists(s:path) " If the ftplugin exists.
       call gruvbox_material#ft_gen(s:path, s:last_modified, 'update')
     endif
     finish
-  elseif !has('nvim') " Only clean the `after/ftplugin` directory when in vim. This code will produce a bug in neovim.
+  else
     call gruvbox_material#ft_clean(s:path, 1)
   endif
 else
@@ -741,6 +917,40 @@ highlight! link NERDTreeLinkTarget Green
 " https://github.com/justinmk/vim-dirvish
 highlight! link DirvishPathTail Aqua
 highlight! link DirvishArg Yellow
+" ft_end }}}
+" ft_begin: NvimTree {{{
+" https://github.com/kyazdani42/nvim-tree.lua
+highlight! link NvimTreeSymlink Fg
+highlight! link NvimTreeFolderName Green
+highlight! link NvimTreeRootFolder Grey
+highlight! link NvimTreeFolderIcon Orange
+highlight! link NvimTreeEmptyFolderName Green
+highlight! link NvimTreeOpenedFolderName Green
+highlight! link NvimTreeExecFile Fg
+highlight! link NvimTreeOpenedFile Fg
+highlight! link NvimTreeSpecialFile Fg
+highlight! link NvimTreeImageFile Fg
+highlight! link NvimTreeMarkdownFile Fg
+highlight! link NvimTreeIndentMarker Grey
+highlight! link NvimTreeGitDirty Yellow
+highlight! link NvimTreeGitStaged Blue
+highlight! link NvimTreeGitMerge Orange
+highlight! link NvimTreeGitRenamed Purple
+highlight! link NvimTreeGitNew Aqua
+highlight! link NvimTreeGitDeleted Red
+" ft_end }}}
+" ft_begin: netrw {{{
+" https://www.vim.org/scripts/script.php?script_id=1075
+highlight! link netrwDir Green
+highlight! link netrwClassify Green
+highlight! link netrwLink Grey
+highlight! link netrwSymLink Fg
+highlight! link netrwExe Yellow
+highlight! link netrwComment Grey
+highlight! link netrwList Aqua
+highlight! link netrwHelpCmd Blue
+highlight! link netrwCmdSep Grey
+highlight! link netrwVersion Orange
 " ft_end }}}
 " ft_begin: startify/quickmenu {{{
 " https://github.com/mhinz/vim-startify
@@ -840,6 +1050,23 @@ highlight! link texBeginEnd Red
 highlight! link texBeginEndName Blue
 highlight! link texDocType Purple
 highlight! link texDocTypeArgs Orange
+" }}}
+" vimtex: https://github.com/lervag/vimtex {{{
+highlight! link texCmd Green
+highlight! link texCmdClass Purple
+highlight! link texCmdTitle Purple
+highlight! link texCmdAuthor Purple
+highlight! link texCmdPart Purple
+highlight! link texCmdBib Purple
+highlight! link texCmdPackage Yellow
+highlight! link texCmdNew Yellow
+highlight! link texArgNew Orange
+highlight! link texPartArgTitle BlueItalic
+highlight! link texFileArg BlueItalic
+highlight! link texEnvArgName BlueItalic
+highlight! link texMathEnvArgName BlueItalic
+highlight! link texTitleArg BlueItalic
+highlight! link texAuthorArg BlueItalic
 " }}}
 " ft_end }}}
 " ft_begin: html/markdown/javascriptreact/typescriptreact {{{
@@ -1695,6 +1922,15 @@ highlight! link matlabRelationalOperator Orange
 highlight! link matlabLogicalOperator Orange
 " }}}
 " ft_end }}}
+" ft_begin: octave {{{
+" vim-octave: https://github.com/McSinyx/vim-octave{{{
+highlight! link octaveDelimiter Fg
+highlight! link octaveSemicolon Grey
+highlight! link octaveOperator Orange
+highlight! link octaveVariable YellowItalic
+highlight! link octaveVarKeyword YellowItalic
+" }}}
+" ft_end }}}
 " ft_begin: sh/zsh {{{
 " builtin: http://www.drchip.org/astronaut/vim/index.html#SYNTAX_SH {{{
 highlight! link shRange Fg
@@ -1889,16 +2125,6 @@ call gruvbox_material#highlight('tomlTable', s:palette.purple, s:palette.none, '
 highlight! link tomlKey Orange
 highlight! link tomlBoolean Aqua
 highlight! link tomlTableArray tomlTable
-" ft_end }}}
-" ft_begin: diff/git {{{
-highlight! link diffAdded Green
-highlight! link diffRemoved Red
-highlight! link diffChanged Blue
-highlight! link diffOldFile Yellow
-highlight! link diffNewFile Orange
-highlight! link diffFile Aqua
-highlight! link diffLine Grey
-highlight! link diffIndexLine Purple
 " ft_end }}}
 " ft_begin: gitcommit {{{
 highlight! link gitcommitSummary Red

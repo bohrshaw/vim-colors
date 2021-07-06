@@ -6,6 +6,12 @@
 " License: MIT License
 " =============================================================================
 
+" g:edge#tmux: is in tmux < 2.9 or not {{{
+let g:edge#tmux = executable('tmux') && $TMUX !=# '' ?
+                  \ (str2float(system("tmux -V | grep -oE '[0-9]+\.[0-9]*'")) < 2.9 ?
+                    \ 1 :
+                    \ 0) :
+                  \ 0 "}}}
 function! edge#get_configuration() "{{{
   return {
         \ 'style': get(g:, 'edge_style', 'default'),
@@ -15,9 +21,12 @@ function! edge#get_configuration() "{{{
         \ 'cursor': get(g:, 'edge_cursor', 'auto'),
         \ 'menu_selection_background': get(g:, 'edge_menu_selection_background', 'blue'),
         \ 'sign_column_background': get(g:, 'edge_sign_column_background', 'default'),
+        \ 'show_eob': get(g:, 'edge_show_eob', 1),
         \ 'current_word': get(g:, 'edge_current_word', get(g:, 'edge_transparent_background', 0) == 0 ? 'grey background' : 'bold'),
         \ 'lightline_disable_bold': get(g:, 'edge_lightline_disable_bold', 0),
+        \ 'diagnostic_text_highlight': get(g:, 'edge_diagnostic_text_highlight', 0),
         \ 'diagnostic_line_highlight': get(g:, 'edge_diagnostic_line_highlight', 0),
+        \ 'diagnostic_virtual_text': get(g:, 'edge_diagnostic_virtual_text', 'grey'),
         \ 'better_performance': get(g:, 'edge_better_performance', 0),
         \ }
 endfunction "}}}
@@ -26,19 +35,19 @@ function! edge#get_palette(style) "{{{
     if a:style ==# 'default' "{{{
       let palette = {
             \ 'bg0':        ['#2c2e34',   '235',  'Black'],
-            \ 'bg1':        ['#30323a',   '236',  'DarkGrey'],
+            \ 'bg1':        ['#33353f',   '236',  'DarkGrey'],
             \ 'bg2':        ['#363944',   '237',  'DarkGrey'],
             \ 'bg3':        ['#3b3e48',   '237',  'Grey'],
             \ 'bg4':        ['#414550',   '238',  'Grey'],
             \ 'bg_grey':    ['#828a98',   '246',  'LightGrey'],
             \ 'bg_red':     ['#ec7279',   '203',  'Red'],
-            \ 'diff_red':   ['#473536',   '52',   'DarkRed'],
+            \ 'diff_red':   ['#55393d',   '52',   'DarkRed'],
             \ 'bg_green':   ['#a0c980',   '107',  'Green'],
-            \ 'diff_green': ['#384034',   '22',   'DarkGreen'],
+            \ 'diff_green': ['#394634',   '22',   'DarkGreen'],
             \ 'bg_blue':    ['#6cb6eb',   '110',  'Blue'],
-            \ 'diff_blue':  ['#323e47',   '17',   'DarkBlue'],
+            \ 'diff_blue':  ['#354157',   '17',   'DarkBlue'],
             \ 'bg_purple':  ['#d38aea',   '176',  'Magenta'],
-            \ 'diff_purple':['#433948',   '54',   'DarkMagenta'],
+            \ 'diff_yellow':['#4e432f',   '54',   'DarkMagenta'],
             \ 'fg':         ['#c5cdd9',   '250',  'White'],
             \ 'red':        ['#ec7279',   '203',  'Red'],
             \ 'yellow':     ['#deb974',   '179',  'Yellow'],
@@ -52,19 +61,19 @@ function! edge#get_palette(style) "{{{
     elseif a:style ==# 'aura' "{{{
       let palette = {
             \ 'bg0':        ['#2b2d37',   '235',  'Black'],
-            \ 'bg1':        ['#2f323e',   '236',  'DarkGrey'],
+            \ 'bg1':        ['#333644',   '236',  'DarkGrey'],
             \ 'bg2':        ['#363a49',   '237',  'DarkGrey'],
             \ 'bg3':        ['#3a3e4e',   '237',  'Grey'],
             \ 'bg4':        ['#404455',   '238',  'Grey'],
             \ 'bg_grey':    ['#7e869b',   '246',  'LightGrey'],
             \ 'bg_red':     ['#ec7279',   '203',  'Red'],
-            \ 'diff_red':   ['#473536',   '52',   'DarkRed'],
+            \ 'diff_red':   ['#55393d',   '52',   'DarkRed'],
             \ 'bg_green':   ['#a0c980',   '107',  'Green'],
-            \ 'diff_green': ['#384034',   '22',   'DarkGreen'],
+            \ 'diff_green': ['#394634',   '22',   'DarkGreen'],
             \ 'bg_blue':    ['#6cb6eb',   '110',  'Blue'],
-            \ 'diff_blue':  ['#323e47',   '17',   'DarkBlue'],
+            \ 'diff_blue':  ['#354157',   '17',   'DarkBlue'],
             \ 'bg_purple':  ['#d38aea',   '176',  'Magenta'],
-            \ 'diff_purple':['#433948',   '54',   'DarkMagenta'],
+            \ 'diff_yellow':['#4e432f',   '54',   'DarkMagenta'],
             \ 'fg':         ['#c5cdd9',   '250',  'White'],
             \ 'red':        ['#ec7279',   '203',  'Red'],
             \ 'yellow':     ['#deb974',   '179',  'Yellow'],
@@ -78,19 +87,19 @@ function! edge#get_palette(style) "{{{
     elseif a:style ==# 'neon' "{{{
       let palette = {
             \ 'bg0':        ['#2b2d3a',   '235',  'Black'],
-            \ 'bg1':        ['#2f3242',   '236',  'DarkGrey'],
+            \ 'bg1':        ['#333648',   '236',  'DarkGrey'],
             \ 'bg2':        ['#363a4e',   '237',  'DarkGrey'],
             \ 'bg3':        ['#393e53',   '237',  'Grey'],
             \ 'bg4':        ['#3f445b',   '238',  'Grey'],
             \ 'bg_grey':    ['#7a819d',   '246',  'LightGrey'],
             \ 'bg_red':     ['#ec7279',   '203',  'Red'],
-            \ 'diff_red':   ['#473536',   '52',   'DarkRed'],
+            \ 'diff_red':   ['#55393d',   '52',   'DarkRed'],
             \ 'bg_green':   ['#a0c980',   '107',  'Green'],
-            \ 'diff_green': ['#384034',   '22',   'DarkGreen'],
+            \ 'diff_green': ['#394634',   '22',   'DarkGreen'],
             \ 'bg_blue':    ['#6cb6eb',   '110',  'Blue'],
-            \ 'diff_blue':  ['#323e47',   '17',   'DarkBlue'],
+            \ 'diff_blue':  ['#354157',   '17',   'DarkBlue'],
             \ 'bg_purple':  ['#d38aea',   '176',  'Magenta'],
-            \ 'diff_purple':['#433948',   '54',   'DarkMagenta'],
+            \ 'diff_yellow':['#4e432f',   '54',   'DarkMagenta'],
             \ 'fg':         ['#c5cdd9',   '250',  'White'],
             \ 'red':        ['#ec7279',   '203',  'Red'],
             \ 'yellow':     ['#deb974',   '179',  'Yellow'],
@@ -117,7 +126,7 @@ function! edge#get_palette(style) "{{{
           \ 'bg_blue':    ['#6996e0',   '68',   'Blue'],
           \ 'diff_blue':  ['#e3eaf6',   '153',  'LightBlue'],
           \ 'bg_purple':  ['#bf75d6',   '134',  'Magenta'],
-          \ 'diff_purple':['#f1e5f5',   '183',  'LightMagenta'],
+          \ 'diff_yellow':['#f0ece2',   '183',  'LightMagenta'],
           \ 'fg':         ['#4b505b',   '240',  'Black'],
           \ 'red':        ['#d05858',   '167',  'Red'],
           \ 'yellow':     ['#be7e05',   '172',  'Yellow'],
@@ -125,7 +134,7 @@ function! edge#get_palette(style) "{{{
           \ 'cyan':       ['#3a8b84',   '73',   'Cyan'],
           \ 'blue':       ['#5079be',   '68',   'Blue'],
           \ 'purple':     ['#b05ccc',   '134',  'Magenta'],
-          \ 'grey':       ['#949ba5',   '245',  'Grey'],
+          \ 'grey':       ['#8790a0',   '245',  'Grey'],
           \ 'none':       ['NONE',      'NONE', 'NONE']
           \ }
   endif "}}}
@@ -139,7 +148,7 @@ function! edge#highlight(group, fg, bg, ...) "{{{
         \ 'ctermbg=' . a:bg[1]
         \ 'gui=' . (a:0 >= 1 ?
           \ (a:1 ==# 'undercurl' ?
-            \ (executable('tmux') && $TMUX !=# '' ?
+            \ (g:edge#tmux ?
               \ 'underline' :
               \ 'undercurl') :
             \ a:1) :
@@ -195,7 +204,10 @@ function! edge#ft_write(rootpath, ft, content) "{{{
   " If there is something like `call edge#highlight()`, then add
   " code to initialize the palette and configuration.
   if matchstr(a:content, 'edge#highlight') !=# ''
-    call writefile(['let s:configuration = edge#get_configuration()', 'let s:palette = edge#get_palette(s:configuration.style)'], ft_path, 'a')
+    call writefile([
+          \ 'let s:configuration = edge#get_configuration()',
+          \ 'let s:palette = edge#get_palette(s:configuration.style)'
+          \ ], ft_path, 'a')
   endif
   " Append the content.
   call writefile(split(a:content, "\n"), ft_path, 'a')
@@ -203,7 +215,7 @@ endfunction "}}}
 function! edge#ft_rootpath(path) "{{{
   " Get the directory where `after/ftplugin` is generated.
   if (matchstr(a:path, '^/usr/share') ==# '') || has('win32') " Return the plugin directory. The `after/ftplugin` directory should never be generated in `/usr/share`, even if you are a root user.
-    return substitute(a:path, '/colors/edge\.vim$', '', '')
+    return fnamemodify(a:path, ':p:h:h')
   else " Use vim home directory.
     if has('nvim')
       return stdpath('config')

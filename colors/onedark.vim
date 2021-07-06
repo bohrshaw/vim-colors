@@ -75,7 +75,7 @@ function! s:h(group, style, ...)
     let s:highlight = s:group_colors[a:group]
     for style_type in ["fg", "bg", "sp"]
       if (has_key(a:style, style_type))
-        let l:default_style = (has_key(s:highlight, style_type) ? s:highlight[style_type] : { "cterm16": "NONE", "cterm": "NONE", "gui": "NONE" })
+        let l:default_style = (has_key(s:highlight, style_type) ? copy(s:highlight[style_type]) : { "cterm16": "NONE", "cterm": "NONE", "gui": "NONE" })
         let s:highlight[style_type] = extend(l:default_style, a:style[style_type])
       endif
     endfor
@@ -192,7 +192,7 @@ call s:h("StorageClass", { "fg": s:yellow }) " static, register, volatile, etc.
 call s:h("Structure", { "fg": s:yellow }) " struct, union, enum, etc.
 call s:h("Typedef", { "fg": s:yellow }) " A typedef
 call s:h("Special", { "fg": s:blue }) " any special symbol
-call s:h("SpecialChar", {}) " special character in a constant
+call s:h("SpecialChar", { "fg": s:dark_yellow }) " special character in a constant
 call s:h("Tag", {}) " you can use CTRL-] on this
 call s:h("Delimiter", {}) " character that needs attention
 call s:h("SpecialComment", { "fg": s:comment_grey }) " special things inside a comment
@@ -438,7 +438,7 @@ call s:h("perlMatchStartEnd",{ "fg": s:blue })
 call s:h("perlMethod", { "fg": s:purple })
 call s:h("perlPOD", { "fg": s:comment_grey })
 call s:h("perlSharpBang", { "fg": s:comment_grey })
-call s:h("perlSpecialString",{ "fg": s:cyan })
+call s:h("perlSpecialString",{ "fg": s:dark_yellow })
 call s:h("perlStatementFiledesc", { "fg": s:red })
 call s:h("perlStatementFlow",{ "fg": s:red })
 call s:h("perlStatementInclude", { "fg": s:purple })
@@ -545,6 +545,11 @@ hi link GitGutterAdd    SignifySignAdd
 hi link GitGutterChange SignifySignChange
 hi link GitGutterDelete SignifySignDelete
 
+" dense-analysis/ale
+call s:h("ALEError", { "fg": s:red, "gui": "underline", "cterm": "underline" })
+call s:h("ALEWarning", { "fg": s:yellow, "gui": "underline", "cterm": "underline"})
+call s:h("ALEInfo", { "gui": "underline", "cterm": "underline"})
+
 " easymotion/vim-easymotion
 call s:h("EasyMotionTarget", { "fg": s:red, "gui": "bold", "cterm": "bold" })
 call s:h("EasyMotionTarget2First", { "fg": s:yellow, "gui": "bold", "cterm": "bold" })
@@ -556,9 +561,15 @@ call s:h("SignifySignAdd", { "fg": s:green })
 call s:h("SignifySignChange", { "fg": s:yellow })
 call s:h("SignifySignDelete", { "fg": s:red })
 
+" neoclide/coc.nvim
+call s:h("CocErrorSign", { "fg": s:red })
+call s:h("CocWarningSign", { "fg": s:yellow })
+call s:h("CocInfoSign", { "fg": s:blue })
+call s:h("CocHintSign", { "fg": s:cyan })
+
 " neomake/neomake
-call s:h("NeomakeWarningSign", { "fg": s:yellow })
 call s:h("NeomakeErrorSign", { "fg": s:red })
+call s:h("NeomakeWarningSign", { "fg": s:yellow })
 call s:h("NeomakeInfoSign", { "fg": s:blue })
 
 " plasticboy/vim-markdown (keep consistent with Markdown, above)
@@ -566,6 +577,12 @@ call s:h("mkdDelimiter", { "fg": s:purple })
 call s:h("mkdHeading", { "fg": s:red })
 call s:h("mkdLink", { "fg": s:blue })
 call s:h("mkdURL", { "fg": s:cyan, "gui": "underline", "cterm": "underline" })
+
+" prabirshrestha/vim-lsp
+call s:h("LspError", { "fg": s:red })
+call s:h("LspWarning", { "fg": s:yellow })
+call s:h("LspInformation", { "fg": s:blue })
+call s:h("LspHint", { "fg": s:cyan })
 
 " tpope/vim-fugitive
 call s:h("diffAdded", { "fg": s:green })
@@ -599,9 +616,10 @@ hi link gitcommitUnmergedArrow gitcommitUnmergedFile
 
 " }}}
 
-" Neovim terminal colors {{{
+" Neovim-Specific Highlighting {{{
 
 if has("nvim")
+  " Neovim terminal colors {{{
   let g:terminal_color_0 =  s:black.gui
   let g:terminal_color_1 =  s:red.gui
   let g:terminal_color_2 =  s:green.gui
@@ -620,6 +638,18 @@ if has("nvim")
   let g:terminal_color_15 = s:comment_grey.gui
   let g:terminal_color_background = g:terminal_color_0
   let g:terminal_color_foreground = g:terminal_color_7
+  " }}}
+
+  " Neovim LSP {{{
+  call s:h("LspDiagnosticsDefaultError", { "fg": s:red })
+  call s:h("LspDiagnosticsDefaultWarning", { "fg": s:yellow })
+  call s:h("LspDiagnosticsDefaultInformation", { "fg": s:white })
+  call s:h("LspDiagnosticsDefaultHint", { "fg": s:comment_grey })
+  call s:h("LspDiagnosticsUnderlineError", { "fg": s:red, "gui": "underline", "cterm": "underline" })
+  call s:h("LspDiagnosticsUnderlineWarning", { "fg": s:yellow, "gui": "underline", "cterm": "underline" })
+  call s:h("LspDiagnosticsUnderlineInformation", { "fg": s:white, "gui": "underline", "cterm": "underline" })
+  call s:h("LspDiagnosticsUnderlineHint", { "fg": s:comment_grey, "gui": "underline", "cterm": "underline" })
+  " }}}
 endif
 
 " }}}

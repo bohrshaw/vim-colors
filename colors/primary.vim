@@ -17,7 +17,6 @@
 "Description:  A Vim color scheme based on Google's colors
 "Author:       Lisie Michel
 "Created:      2015 March 20
-"Modified:     2015 September 1
 "GitHub:       https://github.com/google/vim-colorscheme-primary
 
 hi clear
@@ -31,11 +30,11 @@ if (has('gui_running'))  "Graphical Vim
   "Set color palette with RGB colors
   let s:RED    = '#EA4335'
   let s:GREEN  = '#34A853'
-  let s:YELLOW = '#FBBC05'
+  let s:YELLOW = '#FBBC04'
   let s:BLUE   = '#4285F4'
-  let s:BLACK  = '#000000'
-  let s:DGREY  = '#656565'
-  let s:LGREY  = '#EEEEEE'
+  let s:BLACK  = '#202124'
+  let s:DGREY  = '#5F6368'
+  let s:LGREY  = '#E8EAED'
   let s:WHITE  = '#FFFFFF'
 
   "Set gui mode and italics
@@ -47,11 +46,11 @@ else                     "Console Vim
     "Set color palette with 256 colors
     let s:RED    = '167'
     let s:GREEN  = '71'
-    let s:YELLOW = '220'
+    let s:YELLOW = '214'
     let s:BLUE   = '69'
     let s:BLACK  = '16'
-    let s:DGREY  = '241'
-    let s:LGREY  = '255'
+    let s:DGREY  = '59'
+    let s:LGREY  = '189'
     let s:WHITE  = '231'
   else
     "Set color palette with color names
