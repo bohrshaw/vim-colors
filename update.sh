@@ -38,7 +38,6 @@ sk1418/last256
 sts10/vim-mustard
 tomasr/molokai
 tpope/vim-vividchalk
-trevordmiller/nova-vim
 twerth/ir_black
 vim-scripts/fu
 vim-scripts/twilight

@@ -2,45 +2,44 @@
 " URL: https://github.com/sainnhe/gruvbox-material
 " Filename: autoload/gruvbox_material.vim
 " Author: sainnhe
-" Email: sainnhe@gmail.com
+" Email: i@sainnhe.dev
 " License: MIT License
 " =============================================================================
 
-" g:gruvbox_material#tmux: is in tmux < 2.9 or not {{{
-let g:gruvbox_material#tmux = executable('tmux') && $TMUX !=# '' ?
-                  \ (str2float(system("tmux -V | grep -oE '[0-9]+\.[0-9]*'")) < 2.9 ?
-                    \ 1 :
-                    \ 0) :
-                  \ 0 "}}}
 function! gruvbox_material#get_configuration() "{{{
   return {
         \ 'background': get(g:, 'gruvbox_material_background', 'medium'),
-        \ 'palette': get(g:, 'gruvbox_material_palette', 'material'),
+        \ 'foreground': get(g:, 'gruvbox_material_foreground', get(g:, 'gruvbox_material_palette', 'material')),
         \ 'transparent_background': get(g:, 'gruvbox_material_transparent_background', 0),
+        \ 'dim_inactive_windows': get(g:, 'gruvbox_material_dim_inactive_windows', 0),
         \ 'disable_italic_comment': get(g:, 'gruvbox_material_disable_italic_comment', 0),
         \ 'enable_bold': get(g:, 'gruvbox_material_enable_bold', 0),
         \ 'enable_italic': get(g:, 'gruvbox_material_enable_italic', 0),
         \ 'cursor': get(g:, 'gruvbox_material_cursor', 'auto'),
         \ 'visual': get(g:, 'gruvbox_material_visual', 'grey background'),
         \ 'menu_selection_background': get(g:, 'gruvbox_material_menu_selection_background', 'grey'),
-        \ 'sign_column_background': get(g:, 'gruvbox_material_sign_column_background', 'default'),
+        \ 'sign_column_background': get(g:, 'gruvbox_material_sign_column_background', 'none'),
+        \ 'spell_foreground': get(g:, 'gruvbox_material_spell_foreground', 'none'),
+        \ 'ui_contrast': get(g:, 'gruvbox_material_ui_contrast', 'low'),
         \ 'show_eob': get(g:, 'gruvbox_material_show_eob', 1),
+        \ 'float_style': get(g:, 'gruvbox_material_float_style', 'bright'),
         \ 'current_word': get(g:, 'gruvbox_material_current_word', get(g:, 'gruvbox_material_transparent_background', 0) == 0 ? 'grey background' : 'bold'),
+        \ 'inlay_hints_background': get(g:, 'gruvbox_material_inlay_hints_background', 'none'),
         \ 'statusline_style': get(g:, 'gruvbox_material_statusline_style', 'default'),
         \ 'lightline_disable_bold': get(g:, 'gruvbox_material_lightline_disable_bold', 0),
         \ 'diagnostic_text_highlight': get(g:, 'gruvbox_material_diagnostic_text_highlight', 0),
         \ 'diagnostic_line_highlight': get(g:, 'gruvbox_material_diagnostic_line_highlight', 0),
         \ 'diagnostic_virtual_text': get(g:, 'gruvbox_material_diagnostic_virtual_text', 'grey'),
+        \ 'disable_terminal_colors': get(g:, 'gruvbox_material_disable_terminal_colors', 0),
         \ 'better_performance': get(g:, 'gruvbox_material_better_performance', 0),
+        \ 'colors_override': get(g:, 'gruvbox_material_colors_override', {}),
         \ }
 endfunction "}}}
-function! gruvbox_material#get_palette(background, palette) "{{{
-  if type(a:palette) == 4
-    return a:palette
-  endif
+function! gruvbox_material#get_palette(background, foreground, colors_override) "{{{
   if a:background ==# 'hard' "{{{
     if &background ==# 'dark'
       let palette1 = {
+            \ 'bg_dim':           ['#141617',   '232'],
             \ 'bg0':              ['#1d2021',   '234'],
             \ 'bg1':              ['#282828',   '235'],
             \ 'bg2':              ['#282828',   '235'],
@@ -61,6 +60,7 @@ function! gruvbox_material#get_palette(background, palette) "{{{
             \ }
     else
       let palette1 = {
+            \ 'bg_dim':           ['#f3eac7',   '229'],
             \ 'bg0':              ['#f9f5d7',   '230'],
             \ 'bg1':              ['#f5edca',   '229'],
             \ 'bg2':              ['#f3eac7',   '229'],
@@ -83,6 +83,7 @@ function! gruvbox_material#get_palette(background, palette) "{{{
   elseif a:background ==# 'medium' "{{{
     if &background ==# 'dark'
       let palette1 = {
+            \ 'bg_dim':           ['#1b1b1b',   '233'],
             \ 'bg0':              ['#282828',   '235'],
             \ 'bg1':              ['#32302f',   '236'],
             \ 'bg2':              ['#32302f',   '236'],
@@ -103,6 +104,7 @@ function! gruvbox_material#get_palette(background, palette) "{{{
             \ }
     else
       let palette1 = {
+            \ 'bg_dim':           ['#f2e5bc',   '228'],
             \ 'bg0':              ['#fbf1c7',   '229'],
             \ 'bg1':              ['#f4e8be',   '228'],
             \ 'bg2':              ['#f2e5bc',   '228'],
@@ -122,9 +124,10 @@ function! gruvbox_material#get_palette(background, palette) "{{{
             \ 'bg_current_word':  ['#f2e5bc',   '228']
             \ }
     endif "}}}
-  elseif a:background ==# 'soft' "{{{
+  else "{{{
     if &background ==# 'dark'
       let palette1 = {
+            \ 'bg_dim':           ['#252423',   '233'],
             \ 'bg0':              ['#32302f',   '236'],
             \ 'bg1':              ['#3c3836',   '237'],
             \ 'bg2':              ['#3c3836',   '237'],
@@ -145,6 +148,7 @@ function! gruvbox_material#get_palette(background, palette) "{{{
             \ }
     else
       let palette1 = {
+            \ 'bg_dim':           ['#ebdbb2',   '223'],
             \ 'bg0':              ['#f2e5bc',   '228'],
             \ 'bg1':              ['#eddeb5',   '223'],
             \ 'bg2':              ['#ebdbb2',   '228'],
@@ -165,7 +169,7 @@ function! gruvbox_material#get_palette(background, palette) "{{{
             \ }
     endif
   endif "}}}
-  if a:palette ==# 'material' "{{{
+  if a:foreground ==# 'material' "{{{
     if &background ==# 'dark'
       let palette2 = {
             \ 'fg0':              ['#d4be98',   '223'],
@@ -197,7 +201,7 @@ function! gruvbox_material#get_palette(background, palette) "{{{
             \ 'bg_yellow':        ['#a96b2c',   '130']
             \ }
     endif "}}}
-  elseif a:palette ==# 'mix' "{{{
+  elseif a:foreground ==# 'mix' "{{{
     if &background ==# 'dark'
       let palette2 = {
             \ 'fg0':              ['#e2cca9',   '223'],
@@ -229,7 +233,7 @@ function! gruvbox_material#get_palette(background, palette) "{{{
             \ 'bg_yellow':        ['#a96b2c',   '130']
             \ }
     endif "}}}
-  elseif a:palette ==# 'original' "{{{
+  else "{{{
     if &background ==# 'dark'
       let palette2 = {
             \ 'fg0':              ['#ebdbb2',   '223'],
@@ -277,7 +281,7 @@ function! gruvbox_material#get_palette(background, palette) "{{{
           \ 'none':             ['NONE',      'NONE']
           \ }
   endif "}}}
-  return extend(extend(palette1, palette2), palette3)
+  return extend(extend(extend(palette1, palette2), palette3), a:colors_override)
 endfunction "}}}
 function! gruvbox_material#highlight(group, fg, bg, ...) "{{{
   execute 'highlight' a:group
@@ -286,120 +290,127 @@ function! gruvbox_material#highlight(group, fg, bg, ...) "{{{
         \ 'ctermfg=' . a:fg[1]
         \ 'ctermbg=' . a:bg[1]
         \ 'gui=' . (a:0 >= 1 ?
-          \ (a:1 ==# 'undercurl' ?
-            \ (g:gruvbox_material#tmux ?
-              \ 'underline' :
-              \ 'undercurl') :
-            \ a:1) :
+          \ a:1 :
           \ 'NONE')
         \ 'cterm=' . (a:0 >= 1 ?
-          \ (a:1 ==# 'undercurl' ?
-            \ 'underline' :
-            \ a:1) :
+          \ a:1 :
           \ 'NONE')
         \ 'guisp=' . (a:0 >= 2 ?
           \ a:2[0] :
           \ 'NONE')
 endfunction "}}}
-function! gruvbox_material#ft_gen(path, last_modified, msg) "{{{
-  " Generate the `after/ftplugin` directory.
+function! gruvbox_material#syn_gen(path, last_modified, msg) "{{{
+  " Generate the `after/syntax` directory.
   let full_content = join(readfile(a:path), "\n") " Get the content of `colors/gruvbox-material.vim`
-  let ft_content = []
-  let rootpath = gruvbox_material#ft_rootpath(a:path) " Get the path to place the `after/ftplugin` directory.
-  call substitute(full_content, '" ft_begin.\{-}ft_end', '\=add(ft_content, submatch(0))', 'g') " Search for 'ft_begin.\{-}ft_end' (non-greedy) and put all the search results into a list.
-  for content in ft_content
-    let ft_list = []
-    call substitute(matchstr(matchstr(content, 'ft_begin:.\{-}{{{'), ':.\{-}{{{'), '\(\w\|-\)\+', '\=add(ft_list, submatch(0))', 'g') " Get the file types. }}}}}}
-    for ft in ft_list
-      call gruvbox_material#ft_write(rootpath, ft, content) " Write the content.
+  let syn_content = []
+  let rootpath = gruvbox_material#syn_rootpath(a:path) " Get the path to place the `after/syntax` directory.
+  call substitute(full_content, '" syn_begin.\{-}syn_end', '\=add(syn_content, submatch(0))', 'g') " Search for 'syn_begin.\{-}syn_end' (non-greedy) and put all the search results into a list.
+  for content in syn_content
+    let syn_list = []
+    call substitute(matchstr(matchstr(content, 'syn_begin:.\{-}{{{'), ':.\{-}{{{'), '\(\w\|-\)\+', '\=add(syn_list, submatch(0))', 'g') " Get the file types. }}}}}}
+    for syn in syn_list
+      call gruvbox_material#syn_write(rootpath, syn, content) " Write the content.
     endfor
   endfor
-  call gruvbox_material#ft_write(rootpath, 'text', "let g:gruvbox_material_last_modified = '" . a:last_modified . "'") " Write the last modified time to `after/ftplugin/text/gruvbox_material.vim`
+  call gruvbox_material#syn_write(rootpath, 'text', "let g:gruvbox_material_last_modified = '" . a:last_modified . "'") " Write the last modified time to `after/syntax/text/gruvbox_material.vim`
+  let syntax_relative_path = has('win32') ? '\after\syntax' : '/after/syntax'
   if a:msg ==# 'update'
-    echohl WarningMsg | echom '[gruvbox-material] Updated ' . rootpath . '/after/ftplugin' | echohl None
+    echohl WarningMsg | echom '[gruvbox-material] Updated ' . rootpath . syntax_relative_path | echohl None
+    call gruvbox_material#ftplugin_detect(a:path)
   else
-    echohl WarningMsg | echom '[gruvbox-material] Generated ' . rootpath . '/after/ftplugin' | echohl None
+    echohl WarningMsg | echom '[gruvbox-material] Generated ' . rootpath . syntax_relative_path | echohl None
+    execute 'set runtimepath+=' . fnameescape(fnamemodify(rootpath, ':p')) . 'after'
   endif
 endfunction "}}}
-function! gruvbox_material#ft_write(rootpath, ft, content) "{{{
+function! gruvbox_material#syn_write(rootpath, syn, content) "{{{
   " Write the content.
-  let ft_path = a:rootpath . '/after/ftplugin/' . a:ft . '/gruvbox_material.vim' " The path of a ftplugin file.
+  let syn_path = a:rootpath . '/after/syntax/' . a:syn . '/gruvbox_material.vim' " The path of a syntax file.
   " create a new file if it doesn't exist
-  if !filereadable(ft_path)
-    call mkdir(a:rootpath . '/after/ftplugin/' . a:ft, 'p')
+  if !filereadable(syn_path)
+    call mkdir(a:rootpath . '/after/syntax/' . a:syn, 'p')
     call writefile([
           \ "if !exists('g:colors_name') || g:colors_name !=# 'gruvbox-material'",
           \ '    finish',
           \ 'endif'
-          \ ], ft_path, 'a') " Abort if the current color scheme is not gruvbox-material.
+          \ ], syn_path, 'a') " Abort if the current color scheme is not gruvbox-material.
     call writefile([
-          \ "if index(g:gruvbox_material_loaded_file_types, '" . a:ft . "') ==# -1",
-          \ "    call add(g:gruvbox_material_loaded_file_types, '" . a:ft . "')",
+          \ "if index(g:gruvbox_material_loaded_file_types, '" . a:syn . "') ==# -1",
+          \ "    call add(g:gruvbox_material_loaded_file_types, '" . a:syn . "')",
           \ 'else',
           \ '    finish',
           \ 'endif'
-          \ ], ft_path, 'a') " Abort if this file type has already been loaded.
+          \ ], syn_path, 'a') " Abort if this file type has already been loaded.
   endif
   " If there is something like `call gruvbox_material#highlight()`, then add
   " code to initialize the palette and configuration.
   if matchstr(a:content, 'gruvbox_material#highlight') !=# ''
     call writefile([
           \ 'let s:configuration = gruvbox_material#get_configuration()',
-          \ 'let s:palette = gruvbox_material#get_palette(s:configuration.background, s:configuration.palette)'
-          \ ], ft_path, 'a')
+          \ 'let s:palette = gruvbox_material#get_palette(s:configuration.background, s:configuration.foreground, s:configuration.colors_override)'
+          \ ], syn_path, 'a')
   endif
   " Append the content.
-  call writefile(split(a:content, "\n"), ft_path, 'a')
+  call writefile(split(a:content, "\n"), syn_path, 'a')
+  " Add modeline.
+  call writefile(['" vim: set sw=2 ts=2 sts=2 et tw=80 ft=vim fdm=marker fmr={{{,}}}:'], syn_path, 'a')
 endfunction "}}}
-function! gruvbox_material#ft_rootpath(path) "{{{
-  " Get the directory where `after/ftplugin` is generated.
-  if (matchstr(a:path, '^/usr/share') ==# '') || has('win32') " Return the plugin directory. The `after/ftplugin` directory should never be generated in `/usr/share`, even if you are a root user.
-    return fnamemodify(a:path, ':p:h:h')
+function! gruvbox_material#syn_rootpath(path) "{{{
+  let plugin_path = fnamemodify(a:path, ':p:h:h')
+  " Get the directory where `after/syntax` is generated.
+  if (matchstr(a:path, '^/usr/share') ==# '' && filewritable(plugin_path) == 2) " Return the plugin directory. The `after/syntax` directory should never be generated in `/usr/share`, even if you are a root user.
+    return plugin_path
   else " Use vim home directory.
     if has('nvim')
       return stdpath('config')
     else
-      if has('win32') || has ('win64')
-        return $VIM . '/vimfiles'
-      else
-        return $HOME . '/.vim'
-      endif
+      return expand('~') . '/.vim'
     endif
   endif
 endfunction "}}}
-function! gruvbox_material#ft_newest(path, last_modified) "{{{
-  " Determine whether the current ftplugin files are up to date by comparing the last modified time in `colors/gruvbox-material.vim` and `after/ftplugin/text/gruvbox_material.vim`.
-  let rootpath = gruvbox_material#ft_rootpath(a:path)
-  execute 'source ' . rootpath . '/after/ftplugin/text/gruvbox_material.vim'
+function! gruvbox_material#syn_newest(path, last_modified) "{{{
+  " Determine whether the current syntax files are up to date by comparing the last modified time in `colors/gruvbox-material.vim` and `after/syntax/text/gruvbox_material.vim`.
+  let rootpath = gruvbox_material#syn_rootpath(a:path)
+  execute 'source ' . rootpath . '/after/syntax/text/gruvbox_material.vim'
   return a:last_modified ==# g:gruvbox_material_last_modified ? 1 : 0
 endfunction "}}}
-function! gruvbox_material#ft_clean(path, msg) "{{{
-  " Clean the `after/ftplugin` directory.
-  let rootpath = gruvbox_material#ft_rootpath(a:path)
-  " Remove `after/ftplugin/**/gruvbox_material.vim`.
-  let file_list = split(globpath(rootpath, 'after/ftplugin/**/gruvbox_material.vim'), "\n")
+function! gruvbox_material#syn_clean(path, msg) "{{{
+  " Clean the `after/syntax` directory.
+  let rootpath = gruvbox_material#syn_rootpath(a:path)
+  " Remove `after/syntax/**/gruvbox_material.vim`.
+  let file_list = split(globpath(rootpath, 'after/syntax/**/gruvbox_material.vim'), "\n")
   for file in file_list
     call delete(file)
   endfor
   " Remove empty directories.
-  let dir_list = split(globpath(rootpath, 'after/ftplugin/*'), "\n")
+  let dir_list = split(globpath(rootpath, 'after/syntax/*'), "\n")
   for dir in dir_list
     if globpath(dir, '*') ==# ''
       call delete(dir, 'd')
     endif
   endfor
-  if globpath(rootpath . '/after/ftplugin', '*') ==# ''
-    call delete(rootpath . '/after/ftplugin', 'd')
+  if globpath(rootpath . '/after/syntax', '*') ==# ''
+    call delete(rootpath . '/after/syntax', 'd')
   endif
   if globpath(rootpath . '/after', '*') ==# ''
     call delete(rootpath . '/after', 'd')
   endif
   if a:msg
-    echohl WarningMsg | echom '[gruvbox-material] Cleaned ' . rootpath . '/after/ftplugin' | echohl None
+    let syntax_relative_path = has('win32') ? '\after\syntax' : '/after/syntax'
+    echohl WarningMsg | echom '[gruvbox-material] Cleaned ' . rootpath . syntax_relative_path | echohl None
   endif
 endfunction "}}}
-function! gruvbox_material#ft_exists(path) "{{{
-  return filereadable(gruvbox_material#ft_rootpath(a:path) . '/after/ftplugin/text/gruvbox_material.vim')
+function! gruvbox_material#syn_exists(path) "{{{
+  return filereadable(gruvbox_material#syn_rootpath(a:path) . '/after/syntax/text/gruvbox_material.vim')
+endfunction "}}}
+function! gruvbox_material#ftplugin_detect(path) "{{{
+  " Check if /after/ftplugin exists.
+  " This directory is generated in earlier versions, users may need to manually clean it.
+  let rootpath = gruvbox_material#syn_rootpath(a:path)
+  if filereadable(gruvbox_material#syn_rootpath(a:path) . '/after/ftplugin/text/gruvbox_material.vim')
+    let ftplugin_relative_path = has('win32') ? '\after\ftplugin' : '/after/ftplugin'
+    echohl WarningMsg | echom '[gruvbox-material] Detected ' . rootpath . ftplugin_relative_path | echohl None
+    echohl WarningMsg | echom '[gruvbox-material] This directory is no longer used, you may need to manually delete it.' | echohl None
+  endif
 endfunction "}}}
 
 " vim: set sw=2 ts=2 sts=2 et tw=80 ft=vim fdm=marker fmr={{{,}}}:
